@@ -10,12 +10,10 @@
             
             },
         	{
-                
                 "description": "Conduct thorough assessments of gas emissions from the battery to ensure compliance with regulatory standards.",
                 
             },
             {
-                
                 "description": "Devise novel approaches for the convenient extraction of the battery pack, enhancing serviceability and maintenance
                 efficiency",
                 
@@ -30,13 +28,11 @@
         "time_duration": "Mar 2023 - Feb 2024",
         "details": [
             {
-                
                 "description": " Supervise the gearbox design process for SRE23 and SRE24 cars utilizing CATIA V5, ensuring accuracy and
                 efficiency",
                 
             },
             {
-                    
                  "description": "Skillfully assemble gearboxes and integrated cooling systems, enhancing the overall functionality of the vehicles
                  ",
                     
@@ -48,7 +44,6 @@
                	
             },
             {
-                
                 "description": "Lead team meetings to promote effective communication and coordination, while also coordinating with other
                 departments to ensure smooth integration of project elements",
                	
@@ -62,12 +57,10 @@
         "time_duration": "Aug 2023 - Sep 2023",
         "details": [
             {
-        
                 "description": " Assembling of door rubber seals and windows.",
                
             },
             {
-                
                 "description": "Conduct quality checks on doors to ensure high standards are maintained
                 .",
                 
@@ -75,21 +68,20 @@
         ]
     },
     {
-        "company": "Oracle",
-        "company_location": "Bangalore, India",
-        "role": "Software Engineering Intern",
-        "team": "Apps for Enterprises",
-        "time_duration": "May 2013 - July 2013",
+        "company": "Green World Renewable Energy Pvt. Ltd",
+        "company_location": "Mumabai, India",
+        "role": "Jr. Solar Design Engineer",
+        "time_duration": "Jun 2022 - Feb 2013",
         "details": [
             {
-                "title": "Containerization of iOS Apps",
-                "description": "Worked on sand-boxing of enterprise applications (containerization), enabling their installation on employee's iOS devices, without worrying about security concerns. Implemented wrapping of library function calls using swizzling, objective-c backend, linker flags and dynamic library injection.",
-                "languages": "Objective-C C"
+                "description": "Conduct solar resource assessments for PV plant site selection.",
+                "Software": "AutoCAD"
             },
             {
-                "title": "Sandboxed Browser App",
-                "description": "Built a demo browser application for iOS. Containerized the app using the custom script, for it to work only for whitelisted urls.",
-                "languages": "Objective-C"
+                "description": "Generate plant array layouts, single line diagrams, and as-built drawings for solar projects utilizing AutoCAD.",
+            },
+            {
+                "description": "Perform comprehensive design calculations for equipment sizing, cable sizing, earthing, and other relevant parameter.",
             }
         ]
     }
