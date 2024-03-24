@@ -61,15 +61,14 @@
                
             },
             {
-                "description": "Conduct quality checks on doors to ensure high standards are maintained
-                .",
+                "description": "Conduct quality checks on doors to ensure high standards are maintained.",
                 
             }
         ]
     },
     {
         "company": "Green World Renewable Energy Pvt. Ltd",
-        "company_location": "Mumabai, India",
+        "company_location": "Mumbai, India",
         "role": "Jr. Solar Design Engineer",
         "time_duration": "Jun 2022 - Feb 2013",
         "details": [
@@ -81,7 +80,7 @@
                 "description": "Generate plant array layouts, single line diagrams, and as-built drawings for solar projects utilizing AutoCAD.",
             },
             {
-                "description": "Perform comprehensive design calculations for equipment sizing, cable sizing, earthing, and other relevant parameter.",
+                "description": "Perform comprehensive design calculations for equipment sizing, cable sizing, earthing, and other relevant parameters.",
             }
         ]
     }
