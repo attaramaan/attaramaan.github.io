@@ -5,23 +5,41 @@
         "phone": "+49 15906760342",
         "linkedin":"https://www.linkedin.com/in/amaanattar/",
         "github":"https://github.com/attaramaan",
-        "languages": [
+        "programming": [
             {
-                "language": "Python"
+                "programming": "Python"
             },
             {
-                "language": "C"
+                "programming": "C"
+            }
+            {
+                "programming": "ROS 1/2"
+            }
+            {
+                "programming": "C#"
+            }
+            {
+                "programming": "MATLAB"
             }
         ],
-        "technologies": [
+        "Softwares": [
             {
-                "technology": "NodeJs"
+                "technology": "AutoCAD"
             },
             {
-                "technology": "UWP"
+                "technology": "CATIA V5/V6"
             },
             {
-                "technology": "Win32"
+                "technology": "Solidworks"
+            }
+             {
+                "technology": "Ansys"
+            }
+             {
+                "technology": "Simulink"
+            }
+            {
+                "technology": "Simulink"
             }
         ]
     }
