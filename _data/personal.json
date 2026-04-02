@@ -1,46 +1,172 @@
-[
+{
+  "basics": {
+    "name": "Amaan Attar",
+    "title": "Automotive Engineer",
+    "location": "Ingolstadt, Germany",
+    "current_role": "Master Thesis Student @ Harman International · ADAS & Autonomous Systems",
+    "summary": "Aspiring automotive engineer specialising in machine learning, sensor fusion, and deep learning for autonomous driving. Expert in ADAS testing, high-voltage battery systems, and AI-based optimisation — with hands-on experience across CANoe, PyTorch, MATLAB, and real-world V2X validation.",
+    "contact": {
+      "email": "attaramaan@outlook.de",
+      "phone": "+49 159 0676 0342",
+      "linkedin": "https://linkedin.com/in/amaanattar/",
+      "github": "https://github.com/attaramaan"
+    },
+    "languages": [
+      {
+        "language": "English",
+        "fluency": "C1"
+      },
+      {
+        "language": "German",
+        "fluency": "B1.1"
+      }
+    ]
+  },
+  "skills": [
     {
-        "name": "Amaan Attar",
-        "email": "attaramaan@outlook.de",
-        "phone": "+49 15906760342",
-        "linkedin":"https://www.linkedin.com/in/amaanattar/",
-        "github":"https://github.com/attaramaan",
-        "programming": [
-            {
-                "programming": "Python"
-            },
-            {
-                "programming": "C"
-            }
-            {
-                "programming": "ROS 1/2"
-            }
-            {
-                "programming": "C#"
-            }
-            {
-                "programming": "MATLAB"
-            }
-        ],
-        "Softwares": [
-            {
-                "technology": "AutoCAD"
-            },
-            {
-                "technology": "CATIA V5/V6"
-            },
-            {
-                "technology": "Solidworks"
-            }
-             {
-                "technology": "Ansys"
-            }
-             {
-                "technology": "Simulink"
-            }
-            {
-                "technology": "Simulink"
-            }
-        ]
+      "name": "Python · PyTorch · OpenCV",
+      "level": "90%"
+    },
+    {
+      "name": "MATLAB / Simulink",
+      "level": "85%"
+    },
+    {
+      "name": "CANoe / CANape (ADAS Testing)",
+      "level": "82%"
+    },
+    {
+      "name": "SolidWorks / CATIA / Siemens NX",
+      "level": "88%"
+    },
+    {
+      "name": "Sensor Fusion — LiDAR · RADAR · GNSS",
+      "level": "80%"
+    },
+    {
+      "name": "Battery Systems & HV Testing",
+      "level": "87%"
+    },
+    {
+      "name": "C / C# · ROS · ANSYS",
+      "level": "75%"
     }
-]
+  ],
+  "experience": [
+    {
+      "company": "Harman International",
+      "location": "Garching, Germany",
+      "position": "Working Student — ADAS",
+      "startDate": "APR 2025",
+      "endDate": "CURRENT",
+      "highlights": [
+        "Supported system-level testing for ADAS features including L2+ functionalities using CANoe and CANape.",
+        "Created and managed test configurations for ECU communication (CAN, FlexRay); performed bug tracking via RQM.",
+        "Conducted log analysis, sensor validation, and HIL/SIL data preparation for automotive feature integration.",
+        "Developed tool automation scripts and internal apps for streamlined test result documentation."
+      ],
+      "tags": ["ADAS L2+", "CANoe", "CANape", "CAN / FlexRay", "HIL / SIL", "RQM"]
+    },
+    {
+      "company": "Carissma · Technische Hochschule Ingolstadt",
+      "location": "Ingolstadt, Germany",
+      "position": "Research Assistant — Project BALSAM",
+      "startDate": "OCT 2023",
+      "endDate": "CURRENT",
+      "highlights": [
+        "Designed custom test rigs for battery nail penetration testing on BMW i4 G26 cells.",
+        "Developed MATLAB-based optimisation functions, improving data evaluation efficiency by 20%.",
+        "Conducted battery abuse testing for safety & durability, ensuring compliance with regulatory standards.",
+        "Automated data processing pipelines to support accurate calibration of battery pack functions."
+      ],
+      "tags": ["Battery Testing", "MATLAB", "BMW i4 G26", "Safety Standards", "DFM"]
+    },
+    {
+      "company": "Schanzer Racing Electric",
+      "location": "Ingolstadt, Germany",
+      "position": "Team Leader — Powertrain Department",
+      "startDate": "MAR 2023",
+      "endDate": "AUG 2024",
+      "highlights": [
+        "Designed and validated high-voltage connectors using SolidWorks & CATIA.",
+        "Led design of a lightweight gearbox system: +15% torque transmission, −12% weight.",
+        "Conducted GD&T analysis and tolerance stack-ups for key drivetrain components.",
+        "Developed connector interfaces for powertrain systems ensuring mechanical & electrical compatibility."
+      ],
+      "tags": ["SolidWorks", "CATIA", "GD&T", "HV Systems", "Formula Student"]
+    },
+    {
+      "company": "Audi AG",
+      "location": "Ingolstadt, Germany",
+      "position": "Holiday Job — Assembly & Quality Inspector",
+      "startDate": "AUG 2023",
+      "endDate": "SEPT 2023",
+      "highlights": [
+        "Conducted quality assurance checks on 400+ high-voltage components on the production line, ensuring full alignment with Audi's quality standards."
+      ],
+      "tags": ["Quality Assurance", "HV Components", "Production Line"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "End-of-Line Testing System for Battery Modules",
+      "period": "Aug 2024 — Feb 2025",
+      "description": "Built a mechanical test rig for high-voltage battery packs with ISO compliance. Designed custom connectors, automated data acquisition, and conducted battery abuse testing for safety validation and repeatability.",
+      "tags": ["HV Battery", "ISO Safety", "Test Automation", "Connector Design"]
+    },
+    {
+      "name": "Powertrain Gearbox Design & Validation",
+      "period": "Mar 2024 — Aug 2024",
+      "description": "High-precision gearbox achieving +15% torque transmission and −12% weight. Led full validation, mechanical stress simulations, and applied GD&T for precise fitment in the Formula Student race car.",
+      "tags": ["Gearbox", "FEA", "GD&T", "Schanzer Racing"]
+    },
+    {
+      "name": "Car2X Demonstration & Validation",
+      "period": "Oct 2023 — Feb 2024",
+      "description": "Real-world V2X communication validation at THI Testfield 'First Mile'. Built sensor fusion models (LiDAR, RADAR, GNSS, camera) for improved VRU detection and analysed RSU-based hazard detection latency.",
+      "tags": ["V2X", "Sensor Fusion", "LiDAR", "RADAR", "GNSS"],
+      "url": "https://github.com/attaramaan/Car2x"
+    },
+    {
+      "name": "Automated Testing & Defect Analysis",
+      "period": "Mar 2023 — Feb 2024",
+      "description": "Python-based automated test scripts for Schanzer Racing, reducing manual errors. JIRA defect tracking, endurance testing, and standardised test case documentation for future development cycles.",
+      "tags": ["Python", "Test Automation", "JIRA", "QA"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Technische Hochschule Ingolstadt",
+      "location": "Germany",
+      "degree": "M.Eng Automotive Engineering",
+      "endDate": "Expected Sep 2025",
+      "gpa": "1.8 / 4.0",
+      "courses": [
+        "Automotive Electronics",
+        "Battery Systems",
+        "Computer Vision",
+        "Autonomous Vehicles",
+        "Control Systems",
+        "Power Electronics",
+        "Finite Element Analysis",
+        "Electrochemistry",
+        "Advanced Manufacturing Design",
+        "Machine Design"
+      ]
+    },
+    {
+      "institution": "University of Mumbai",
+      "location": "India",
+      "degree": "B.E Mechanical Engineering",
+      "endDate": "Graduated Aug 2022",
+      "gpa": "1.2 / 4.0"
+    }
+  ],
+  "publications": [
+    {
+      "name": "Workplace Safety using Artificial Intelligence and Machine Learning",
+      "publisher": "IJERT · International Journal of Engineering Research & Technology",
+      "url": "https://www.ijert.org/workplace-safety-using-ai-and-ml"
+    }
+  ]
+}
