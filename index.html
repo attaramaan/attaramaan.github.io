@@ -3,526 +3,803 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Amaan Attar - Automotive Engineer specializing in machine learning, sensor fusion, and deep learning for autonomous driving." />
+  <meta name="description" content="Amaan Attar - Automotive Engineer specializing in ADAS, sensor fusion, and autonomous systems." />
   <title>Amaan Attar — Automotive Engineer</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Playfair+Display:wght@400;600&family=Syne:wght@400;700;800&family=Outfit:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,700&family=Rajdhani:wght@400;500;600;700&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  
+  <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
   <style>
+    /* Premium Studio Variables */
     :root {
-      --bg:       #05080f;
-      --surface:  #0c1018;
-      --card:     #101520;
-      --accent:   #00c8ff;
-      --accent2:  #ff6b35;
-      --green:    #00e5a0;
-      --text:     #e8edf5;
-      --text-muted: #94a0b8; 
-      --muted:    #5a6478;
-      --border:   #1a2030;
+      --bg: #0a0a0a;
+      --text: #ffffff;
+      --border: rgba(255, 255, 255, 0.15);
+      --accent: #ffffff;
+      --alert: #ff3333;
+      --muted: #888888;
+      --overlay: #0a0a0a;
+      --hover-bg: rgba(255, 255, 255, 0.03);
+    }
+    
+    body[data-theme="light"] {
+      --bg: #e5e5e5;
+      --text: #0a0a0a;
+      --border: rgba(0, 0, 0, 0.15);
+      --accent: #0a0a0a;
+      --alert: #ff0000;
+      --muted: #666666;
+      --overlay: #e5e5e5;
+      --hover-bg: rgba(0, 0, 0, 0.04);
     }
     
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     
-    /* Focus State Management */
-    :focus { outline: none; }
-    :focus-visible { outline: 1px dashed var(--accent); outline-offset: 3px; }
-    
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Outfit', sans-serif;
-      font-weight: 300;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(0,200,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,200,255,0.025) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none; z-index: 0;
-    }
-
-    /* NAV */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.4rem 5rem;
-      transition: background 0.4s, border-color 0.4s;
-      border-bottom: 1px solid transparent;
-    }
-    nav.scrolled { background: rgba(5,8,15,0.9); backdrop-filter: blur(16px); border-color: var(--border); }
-    .nav-logo { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); position: relative; z-index: 201; }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--accent); }
-    .mobile-toggle { display: none; background: transparent; border: none; color: var(--accent); cursor: pointer; z-index: 201; }
     
-    /* HERO */
-    #hero {
-      min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
-      padding: 0 5rem; position: relative; z-index: 1; overflow: hidden;
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Inter', sans-serif; font-weight: 400;
+      overflow-x: hidden; transition: background 0.6s ease, color 0.6s ease;
+      cursor: none;
     }
-    #hero::after {
-      content: ''; position: absolute; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      animation: scan 7s linear infinite; opacity: 0.12; pointer-events: none;
-    }
-    @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
-    .hero-eyebrow {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 4px;
-      color: var(--accent); text-transform: uppercase; margin-bottom: 1.5rem;
-      opacity: 0; animation: fadeUp 0.7s 0.2s ease forwards;
+    /* --- Custom Cursor --- */
+    .custom-cursor {
+      position: fixed; top: 0; left: 0; width: 12px; height: 12px;
+      background: var(--text); border-radius: 50%;
+      pointer-events: none; z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), mix-blend-mode 0.3s;
+      mix-blend-mode: difference;
+    }
+    .custom-cursor.hover { width: 50px; height: 50px; background: #ffffff; mix-blend-mode: difference; }
+    @media (pointer: coarse) { .custom-cursor { display: none; } body { cursor: auto; } }
+
+    /* --- High-End Film Grain Noise --- */
+    .noise {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.08"/%3E%3C/svg%3E');
+    }
+
+    /* --- Preloader --- */
+    #preloader {
+      position: fixed; inset: 0; background: var(--bg); z-index: 9999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+    #preloader.hide { transform: translateY(-100%); }
+    .loader-text { overflow: hidden; margin-bottom: 0.5rem; padding: 0.1em 0; }
+    .loader-line { 
+      display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; text-transform: uppercase; color: var(--text);
+      transform: translateY(100%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); line-height: 1.2;
+    }
+    .loader-line.show { transform: translateY(0); }
+
+    /* --- Three.js Canvas & HUD --- */
+    #webgl-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; opacity: 0.4; transition: opacity 0.5s; }
+    #telemetry-hud {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 50; pointer-events: none;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--muted);
+      text-transform: uppercase; text-align: right; display: flex; flex-direction: column; gap: 0.3rem;
+      opacity: 0; transition: opacity 1s ease;
+    }
+    .hud-val { color: var(--text); font-weight: 500; font-size: 0.8rem; }
+    .sys-status { color: var(--text); margin-top: 0.5rem; border: 1px solid var(--border); padding: 0.2rem 0.5rem; display: inline-block; }
+
+    /* Subtle Collision Warning UI */
+    #collision-warning {
+      position: fixed; bottom: 2rem; left: 2rem; z-index: 150; pointer-events: none;
       display: flex; align-items: center; gap: 1rem;
+      background: rgba(10, 2, 5, 0.85); border-left: 3px solid var(--alert);
+      padding: 1rem 1.5rem; box-shadow: 0 4px 15px rgba(255, 0, 68, 0.2);
+      backdrop-filter: blur(8px);
+      opacity: 0; transform: translateX(-20px); transition: opacity 0.3s ease, transform 0.3s ease;
     }
-    .hero-eyebrow::before { content: ''; display: block; width: 40px; height: 1px; background: var(--accent); }
-    h1.hero-name {
-      font-family: 'Montserrat', sans-serif; font-weight: 900;
-      font-size: clamp(3.5rem, 9vw, 9rem); line-height: 0.88; letter-spacing: -2px;
-      opacity: 0; animation: fadeUp 0.7s 0.35s ease forwards;
+    #collision-warning.active {
+      opacity: 1; transform: translateX(0);
     }
-    h1.hero-name .surname { 
-      font-family: 'Playfair Display', serif; 
-      font-weight: 400; 
-      color: var(--accent); 
-      letter-spacing: 0px; 
+    .warning-icon { font-size: 1.5rem; line-height: 1; }
+    .warning-text-box { display: flex; flex-direction: column; }
+    .warning-title { font-family: 'Chakra Petch', sans-serif; font-size: 1rem; font-weight: 700; color: var(--alert); letter-spacing: 2px; line-height: 1.2; }
+    .warning-sub { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 600; color: #ffffff; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* --- Navigation --- */
+    nav {
+      position: fixed; top: 0; width: 100%; padding: 2rem 3rem; z-index: 200;
+      display: flex; justify-content: space-between; align-items: center; mix-blend-mode: difference; color: #fff;
     }
-    .hero-sub {
-      font-family: 'Syne', sans-serif; font-size: clamp(1rem, 2.2vw, 1.5rem); font-weight: 400;
-      color: var(--muted); margin-top: 1.2rem; letter-spacing: 0.5px;
-      opacity: 0; animation: fadeUp 0.7s 0.5s ease forwards;
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; text-transform: uppercase; text-decoration: none; color: inherit; }
+    .nav-controls { display: flex; gap: 2rem; align-items: center; }
+    .nav-btn { 
+      background: none; border: none; color: inherit; font-family: 'JetBrains Mono', monospace; 
+      font-size: 0.75rem; text-transform: uppercase; cursor: none; letter-spacing: 1px;
     }
-    .hero-sub span { color: var(--accent2); }
-    .hero-desc {
-      max-width: 55ch; color: var(--text-muted); font-size: 1rem; line-height: 1.9; margin-top: 1.8rem;
-      opacity: 0; animation: fadeUp 0.7s 0.65s ease forwards;
+
+    /* --- Full-Screen Menu Overlay --- */
+    #menu-overlay {
+      position: fixed; inset: 0; background: var(--overlay); z-index: 150;
+      display: flex; flex-direction: column; justify-content: center; padding: 0 10vw;
+      clip-path: inset(0 0 100% 0); transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1);
     }
-    .hero-actions {
-      display: flex; align-items: center; gap: 1.5rem; margin-top: 3rem; flex-wrap: wrap;
-      opacity: 0; animation: fadeUp 0.7s 0.8s ease forwards;
+    #menu-overlay.open { clip-path: inset(0 0 0 0); }
+    .menu-link-wrapper { overflow: hidden; padding: 0.2em 0; margin: -0.2em 0; }
+    .menu-link {
+      display: inline-block; font-family: 'Syne', sans-serif; font-size: clamp(3rem, 8vw, 8rem); 
+      font-weight: 800; line-height: 1.05; text-transform: uppercase; color: var(--text); text-decoration: none;
+      transform: translateY(110%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s;
+      white-space: normal; word-break: break-word;
     }
-    .btn { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; padding: 0.85rem 2rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.6rem; }
-    .btn-fill { background: var(--accent); color: #000; font-weight: 500; }
-    .btn-fill:hover { background: #fff; transform: translateY(-2px); }
-    .btn-ghost { border: 1px solid var(--border); color: var(--muted); }
-    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-    .hero-status { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--muted); letter-spacing: 2px; display: flex; align-items: center; gap: 0.5rem; }
-    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(0,229,160,0.4); } 50% { box-shadow: 0 0 0 6px rgba(0,229,160,0); } }
+    #menu-overlay.open .menu-link { transform: translateY(0); }
+    .menu-link:hover { color: var(--muted); }
 
-    /* SECTIONS */
-    section { position: relative; z-index: 1; padding: 7rem 5rem; border-top: 1px solid var(--border); }
-    .sh { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 4.5rem; }
-    .sh-num { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent2); letter-spacing: 3px; }
-    .sh-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: -1px; }
-    .sh-line { flex: 1; height: 1px; background: var(--border); }
+    /* --- Editorial Layout Core --- */
+    main { position: relative; z-index: 10; }
+    section { padding: 8rem 3rem; border-bottom: 1px solid var(--border); }
+    
+    /* --- Scroll Reveal Utilities --- */
+    .reveal-up { overflow: hidden; padding-bottom: 0.5em; margin-bottom: -0.5em; padding-top: 0.2em; margin-top: -0.2em; }
+    .reveal-up > * { display: block; transform: translateY(120%); transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
+    .reveal-up.active > * { transform: translateY(0); }
 
-    /* ABOUT */
-    .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 6rem; align-items: start; }
-    .about-p { font-size: 1rem; color: var(--text-muted); line-height: 1.9; margin-bottom: 1.2rem; }
-    .about-p strong { color: var(--text); font-weight: 500; }
-    .lang-pills { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.5rem; }
-    .pill { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; padding: 0.32rem 0.9rem; border: 1px solid var(--border); color: var(--muted); border-radius: 2px; }
-    .pill.hi { border-color: var(--accent); color: var(--accent); }
+    /* --- Hero Section (Centered & Precise Layout) --- */
+    .hero { 
+      min-height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; /* Vertically center */
+      align-items: center;     /* Horizontally center */
+      padding: 0 3rem; 
+      position: relative;
+    }
+    .hero-center {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    
+    /* PRECISE, SMALLER, ELEGANT FONT */
+    .hero-title { 
+      font-family: 'Syne', sans-serif; 
+      font-size: clamp(2rem, 4.5vw, 4.5rem); /* Significantly scaled down */
+      font-weight: 700; /* Dialed back weight for elegance */
+      line-height: 1.1; 
+      text-transform: uppercase; 
+      letter-spacing: 4px; /* Added tracking for an engineered, precise look */
+      margin: 0; 
+      text-align: center;
+    }
+    
+    /* Meta text pinned to the bottom */
+    .hero-meta { 
+      position: absolute; 
+      bottom: 3rem; 
+      left: 3rem; 
+      right: 3rem; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: flex-end; 
+      border-top: 1px solid var(--border); 
+      padding-top: 1.5rem; 
+    }
+    .hero-desc { max-width: 400px; font-size: 0.9rem; line-height: 1.6; color: var(--muted); text-align: left; }
+    .hero-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; text-align: right; }
 
-    .skills-wrap { display: flex; flex-direction: column; gap: 1rem; }
-    .skill-row { display: flex; flex-direction: column; gap: 0.4rem; }
-    .skill-hd { display: flex; justify-content: space-between; }
-    .skill-name { font-size: 0.82rem; font-weight: 500; }
-    .skill-pct { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--muted); }
-    .skill-track { height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
-    .skill-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); transform: scaleX(0); transform-origin: left; transition: transform 1.3s cubic-bezier(0.16,1,0.3,1); }
-    .skill-fill.go { transform: scaleX(1); }
+    /* --- Infinite Marquee --- */
+    .marquee { overflow: hidden; white-space: nowrap; padding: 2.5rem 0; border-bottom: 1px solid var(--border); background: var(--text); color: var(--bg); }
+    .marquee-track { display: inline-block; animation: scroll-marquee 25s linear infinite; font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; line-height: 1.1; padding: 0.1em 0; }
+    .marquee-track span { padding-right: 2rem; }
+    @keyframes scroll-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    /* EXPERIENCE */
-    .exp-list { display: flex; flex-direction: column; }
-    .exp-item { display: grid; grid-template-columns: 180px 1fr; gap: 0 3rem; padding: 2.8rem 0; border-bottom: 1px solid var(--border); }
-    .exp-item:first-child { border-top: 1px solid var(--border); }
-    .exp-date { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--muted); letter-spacing: 1px; line-height: 1.6; padding-top: 0.2rem; }
-    .exp-active { display: inline-block; margin-top: 0.5rem; font-size: 0.6rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; text-transform: uppercase; padding: 0.2rem 0.55rem; background: rgba(0,229,160,0.1); color: var(--green); border: 1px solid rgba(0,229,160,0.3); border-radius: 2px; }
-    .exp-role { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; margin-bottom: 0.2rem; }
-    .exp-co { font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--accent); margin-bottom: 1rem; }
-    .exp-ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-    .exp-ul li { font-size: 0.87rem; color: var(--text-muted); line-height: 1.75; padding-left: 1.2rem; position: relative; }
-    .exp-ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent2); font-size: 0.68rem; top: 0.18rem; }
-    .tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem; }
-    .tag { font-size: 0.63rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; text-transform: uppercase; padding: 0.25rem 0.65rem; border: 1px solid var(--border); color: var(--muted); border-radius: 2px; }
+    /* --- Services / Expertise List --- */
+    .expertise-list { display: flex; flex-direction: column; }
+    .expertise-item { 
+      display: flex; justify-content: space-between; align-items: center; padding: 3rem 0; 
+      border-bottom: 1px solid var(--border); transition: padding 0.4s ease, background 0.4s ease; cursor: none;
+    }
+    .expertise-item:hover { padding: 3rem 2rem; background: var(--hover-bg); border-color: var(--accent); }
+    .expertise-num { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--muted); transition: color 0.4s; }
+    .expertise-name { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 4rem); font-weight: 700; text-transform: uppercase; letter-spacing: -1px; line-height: 1.0; }
+    .expertise-desc { font-size: 0.9rem; color: var(--muted); max-width: 300px; text-align: right; line-height: 1.5; }
+    .expertise-item:hover .expertise-num { color: var(--accent); }
 
-    /* PROJECTS */
-    .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 1.5rem; }
-    .proj-card { background: var(--card); border: 1px solid var(--border); padding: 2rem; position: relative; overflow: hidden; transition: border-color 0.25s, transform 0.25s; }
-    .proj-card:hover { border-color: var(--accent); transform: translateY(-5px); }
-    .proj-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--green)); opacity: 0; transition: opacity 0.25s; }
-    .proj-card:hover::before { opacity: 1; }
-    .proj-n { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; color: var(--muted); letter-spacing: 2px; margin-bottom: 0.8rem; }
-    .proj-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 0.35rem; line-height: 1.35; }
-    .proj-period { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; color: var(--accent2); margin-bottom: 1rem; }
-    .proj-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.75; margin-bottom: 1.2rem; }
-    .proj-link { font-family: 'JetBrains Mono', monospace; font-size: 0.67rem; letter-spacing: 1px; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: gap 0.2s; }
-    .proj-link:hover { gap: 0.9rem; }
+    /* --- Experience Table --- */
+    .exp-table { width: 100%; border-collapse: collapse; }
+    .exp-row { border-bottom: 1px solid var(--border); }
+    .exp-row td { padding: 3rem 0; vertical-align: top; }
+    .exp-year { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--muted); width: 15%; }
+    .exp-role { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; line-height: 1.1; }
+    .exp-company { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
+    .exp-details { font-size: 0.9rem; line-height: 1.6; color: var(--muted); max-width: 500px; }
 
-    /* EDUCATION */
-    .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    .edu-card { background: var(--card); border: 1px solid var(--border); padding: 2.2rem 2rem 2.2rem 2.5rem; transition: border-color 0.2s; position: relative; overflow: hidden; }
-    .edu-card:hover { border-color: var(--accent); }
-    .edu-stripe { position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--accent), var(--green)); }
-    .edu-deg { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; margin-bottom: 0.3rem; }
-    .edu-school { font-family: 'JetBrains Mono', monospace; font-size: 0.73rem; color: var(--accent); margin-bottom: 0.5rem; }
-    .edu-meta { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.9rem; }
-    .gpa-badge { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--green); border: 1px solid rgba(0,229,160,0.3); padding: 0.22rem 0.65rem; border-radius: 2px; }
+    /* --- Projects Section (Elegant Interactive List) --- */
+    .project-filters { display: flex; gap: 1rem; margin-bottom: 4rem; flex-wrap: wrap; }
+    .filter-btn { background: transparent; border: 1px solid var(--border); color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; padding: 0.6rem 1.2rem; cursor: none; border-radius: 30px; transition: all 0.3s ease; }
+    .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+    .filter-btn.active { border-color: var(--accent); color: var(--text); background: var(--hover-bg); }
 
-    .courses-box { margin-top: 3rem; border: 1px solid var(--border); padding: 2rem; background: var(--card); }
-    .courses-label { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
-    .courses-list { display: flex; flex-wrap: wrap; gap: 0.6rem; }
-    .course { font-size: 0.73rem; padding: 0.32rem 0.85rem; border: 1px solid var(--border); color: var(--text-muted); border-radius: 2px; }
+    .project-list { display: flex; flex-direction: column; border-top: 1px solid var(--border); }
+    .project-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 4rem 0; border-bottom: 1px solid var(--border);
+      text-decoration: none; color: var(--text); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: none;
+    }
+    .project-row.hide { display: none; }
+    .project-row:hover { padding: 4rem 2rem; background: var(--hover-bg); border-color: var(--accent); }
+    
+    .p-left { display: flex; align-items: baseline; gap: 2rem; }
+    .p-num { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--muted); transition: color 0.4s; }
+    .p-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 3.5rem); font-weight: 700; text-transform: uppercase; letter-spacing: -1px; margin: 0; line-height: 1.0; }
+    
+    .p-right { display: flex; align-items: center; gap: 4rem; }
+    .p-tags { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--muted); text-transform: uppercase; text-align: right; }
+    .p-icon { font-size: 1.5rem; font-family: 'JetBrains Mono', monospace; transform: rotate(0deg); transition: transform 0.4s ease, color 0.4s; color: var(--muted); font-weight: 300;}
+    
+    .project-row:hover .p-icon { transform: rotate(45deg); color: var(--text); }
+    .project-row:hover .p-num { color: var(--accent); }
 
-    /* PUBLICATION */
-    .pub-card { background: var(--card); border: 1px solid var(--border); padding: 2rem 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; transition: border-color 0.2s; }
-    .pub-card:hover { border-color: var(--accent); }
-    .pub-journal { font-family: 'JetBrains Mono', monospace; font-size: 0.67rem; color: var(--accent2); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem; }
-    .pub-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; }
-    .pub-link { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 1px; color: var(--accent); text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: 0.4rem; transition: gap 0.2s; }
-    .pub-link:hover { gap: 0.9rem; }
+    /* --- Footer --- */
+    footer { padding: 10rem 3rem 3rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .footer-title { font-family: 'Syne', sans-serif; font-size: clamp(4rem, 12vw, 15rem); font-weight: 800; line-height: 1.05; text-transform: uppercase; letter-spacing: -0.05em; text-decoration: none; color: var(--text); transition: color 0.3s; display: block; word-break: break-word;}
+    .footer-title:hover { color: var(--muted); }
+    .footer-meta { width: 100%; display: flex; justify-content: space-between; margin-top: 8rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; border-top: 1px solid var(--border); padding-top: 1.5rem; }
 
-    /* CONTACT */
-    #contact { background: var(--surface); text-align: center; }
-    #contact .sh { justify-content: center; }
-    .contact-sub { color: var(--text-muted); max-width: 44ch; margin: 0 auto 3.5rem; font-size: 1rem; line-height: 1.8; }
-    .contact-grid { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-    .contact-card { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; border: 1px solid var(--border); padding: 1.8rem 2.3rem; text-decoration: none; color: var(--text); background: var(--card); transition: border-color 0.2s, transform 0.2s; min-width: 160px; }
-    .contact-card:hover { border-color: var(--accent); transform: translateY(-4px); }
-    .contact-card:hover .ic { color: var(--accent); }
-    .contact-card .ic { width: 24px; height: 24px; color: var(--muted); transition: color 0.2s; }
-    .contact-card .cl { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 0.4rem; }
-    .contact-card .cv { font-size: 0.82rem; color: var(--text-muted); }
-
-    /* FOOTER */
-    footer { padding: 2rem 5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; z-index: 1; position: relative; }
-    .footer-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; letter-spacing: 3px; font-size: 0.85rem; color: var(--muted); }
-    .footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; color: var(--muted); }
-
-    /* ANIMATION */
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* RESPONSIVE */
+    /* --- Responsive --- */
     @media (max-width: 900px) {
-      nav { padding: 1.2rem 1.5rem; }
-      .mobile-toggle { display: block; }
-      .nav-links {
-        position: fixed; top: 0; right: -100%; height: 100vh; width: 250px;
-        background: var(--surface); border-left: 1px solid var(--border);
-        flex-direction: column; padding: 6rem 2rem 2rem; transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        display: flex;
+      nav { padding: 1.5rem; }
+      section { padding: 5rem 1.5rem; }
+      
+      /* Mobile Hero Fixes */
+      .hero-meta {
+        position: relative;
+        bottom: 0; left: 0; right: 0;
+        margin-top: 4rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+        width: 100%;
+        border-top: 1px solid var(--border);
+        padding-top: 1.5rem;
       }
-      .nav-links.active { right: 0; }
-      #hero, section { padding: 5rem 1.5rem; }
-      #hero { padding-top: 8rem; }
-      .about-grid, .edu-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .exp-item { grid-template-columns: 1fr; gap: 0.7rem; }
-      footer { flex-direction: column; gap: 0.8rem; padding: 1.5rem; text-align: center; }
+      .hero-desc { text-align: left; }
+      .hero-tag { text-align: left; }
+
+      .expertise-item { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 2rem 0; }
+      .expertise-desc { text-align: left; }
+      .exp-row td { display: block; padding: 1.5rem 0; }
+      .exp-year { padding-bottom: 0; width: 100%; }
+      .project-row { flex-direction: column; align-items: flex-start; gap: 2rem; padding: 3rem 0; }
+      .project-row:hover { padding: 3rem 1rem; }
+      .p-right { width: 100%; justify-content: space-between; gap: 1rem; }
+      .p-tags { text-align: left; }
+      #telemetry-hud { display: none; }
+      #collision-warning { bottom: 1.5rem; left: 1.5rem; padding: 0.8rem 1rem; }
     }
   </style>
 </head>
-<body>
+<body data-theme="dark">
 
-<nav id="navbar">
-  <div class="nav-logo">AMAAN ATTAR</div>
-  <button class="mobile-toggle" aria-label="Toggle navigation">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-  </button>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+<div class="custom-cursor" id="cursor"></div>
+
+<div class="noise"></div>
+
+<div id="preloader">
+  <div class="loader-text"><span class="loader-line" id="ll-1">ADAS SYSTEM v3.1.2</span></div>
+  <div class="loader-text"><span class="loader-line" id="ll-2">CALIBRATING LIDAR CLOUD</span></div>
+  <div class="loader-text"><span class="loader-line" id="ll-3">AMAAN ATTAR © 2026</span></div>
+</div>
+
+<canvas id="webgl-canvas"></canvas>
+
+<div id="telemetry-hud">
+  <div>Lat Offset: <span class="hud-val" id="hud-offset">0.00m</span></div>
+  <div>Velocity: <span class="hud-val" id="hud-speed">0.0km/h</span></div>
+  <div>Targets: <span class="hud-val" id="hud-targets">0</span></div>
+  <div class="sys-status" id="hud-sys">SYSTEM_OK</div>
+</div>
+
+<div id="collision-warning">
+  <span class="warning-icon">⚠️</span>
+  <div class="warning-text-box">
+    <span class="warning-title">PROXIMITY ALERT</span>
+    <span class="warning-sub">AEB ENGAGED</span>
+  </div>
+</div>
+
+<nav>
+  <a href="#" class="logo hoverable">AMAAN ATTAR</a>
+  <div class="nav-controls">
+    <button class="nav-btn hoverable" id="theme-btn">[ THEME ]</button>
+    <button class="nav-btn hoverable" id="menu-btn">[ MENU ]</button>
+  </div>
 </nav>
 
-<section id="hero">
-  <div class="hero-eyebrow">Automotive Engineer · Ingolstadt, Germany</div>
-  <h1 class="hero-name">AMAAN<br><span class="surname">ATTAR</span></h1>
-  <p class="hero-sub">Master Thesis Student @ <span>Harman International</span> &nbsp;·&nbsp; ADAS &amp; Autonomous Systems</p>
-  <p class="hero-desc">Aspiring automotive engineer specialising in machine learning, sensor fusion, and deep learning for autonomous driving. Expert in ADAS testing, high-voltage battery systems, and AI-based optimisation — with hands-on experience across CANoe, PyTorch, MATLAB, and real-world V2X validation.</p>
-  <div class="hero-actions">
-    <a href="#contact" class="btn btn-fill">Get in touch →</a>
-    <a href="https://linkedin.com/in/amaanattar/" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
-    <div class="hero-status"><span class="live-dot"></span> Open to opportunities · Ingolstadt, DE</div>
-  </div>
-</section>
+<div id="menu-overlay">
+  <div class="menu-link-wrapper"><a href="#about" class="menu-link hoverable menu-item">About</a></div>
+  <div class="menu-link-wrapper"><a href="#expertise" class="menu-link hoverable menu-item">Expertise</a></div>
+  <div class="menu-link-wrapper"><a href="#experience" class="menu-link hoverable menu-item">Experience</a></div>
+  <div class="menu-link-wrapper"><a href="#work" class="menu-link hoverable menu-item">Work</a></div>
+  <div class="menu-link-wrapper"><a href="#contact" class="menu-link hoverable menu-item">Contact</a></div>
+</div>
 
-<section id="about">
-  <div class="sh"><span class="sh-num">01 /</span><h2 class="sh-title">About</h2><div class="sh-line"></div></div>
-  <div class="about-grid">
-    <div>
-      <p class="about-p reveal">I'm a <strong>Mechanical &amp; Automotive Engineer</strong> currently pursuing my M.Eng at <strong>Technische Hochschule Ingolstadt</strong> and completing my Master Thesis at <strong>Harman International</strong> in ADAS systems.</p>
-      <p class="about-p reveal">My work lives at the intersection of hardware and intelligence — from designing <strong>high-voltage powertrain systems</strong> for Formula Student to building <strong>sensor fusion pipelines</strong> for V2X communication, and conducting battery abuse tests on <strong>BMW i4 G26 cells</strong>.</p>
-      <p class="about-p reveal">I've published research on <strong>AI-based workplace safety</strong>, led a Formula Student powertrain team, and worked hands-on at <strong>Audi AG</strong> validating high-voltage components on the production line. I thrive where rigorous engineering meets cutting-edge AI.</p>
-      <div class="lang-pills reveal">
-        <span class="pill hi">English C1</span>
-        <span class="pill">German B1.1</span>
-      </div>
+<main>
+  
+  <section id="hero" class="hero">
+    
+    <div class="hero-center">
+      <div class="reveal-up"><h1 class="hero-title">AUTONOMOUS</h1></div>
+      <div class="reveal-up"><h1 class="hero-title">ENGINEERING</h1></div>
+      <div class="reveal-up"><h1 class="hero-title">&amp; DESIGN</h1></div>
     </div>
-    <div class="skills-wrap reveal">
-      <div class="skill-row">
-        <div class="skill-hd"><span class="skill-name">Python · PyTorch · OpenCV</span><span class="skill-pct">90%</span></div>
-        <div class="skill-track"><div class="skill-fill" style="width:90%"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-hd"><span class="skill-name">MATLAB / Simulink</span><span class="skill-pct">85%</span></div>
-        <div class="skill-track"><div class="skill-fill" style="width:85%"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-hd"><span class="skill-name">CANoe / CANape (ADAS Testing)</span><span class="skill-pct">82%</span></div>
-        <div class="skill-track"><div class="skill-fill" style="width:82%"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-hd"><span class="skill-name">SolidWorks / CATIA / Siemens NX</span><span class="skill-pct">88%</span></div>
-        <div class="skill-track"><div class="skill-fill" style="width:88%"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-hd"><span class="skill-name">Sensor Fusion — LiDAR · RADAR · GNSS</span><span class="skill-pct">80%</span></div>
-        <div class="skill-track"><div class="skill-fill" style="width:80%"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-hd"><span class="skill-name">Battery Systems &amp; HV Testing</span><span class="skill-pct">87%</span></div>
-        <div class="skill-track"><div class="skill-fill" style="width:87%"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-hd"><span class="skill-name">C / C# · ROS · ANSYS</span><span class="skill-pct">75%</span></div>
-        <div class="skill-track"><div class="skill-fill" style="width:75%"></div></div>
-      </div>
+
+    <div class="hero-meta reveal-up">
+      <p class="hero-desc">Aspiring automotive engineer bridging rigorous mechanical hardware with cutting-edge artificial intelligence and sensor fusion.</p>
+      <div class="hero-tag">Ingolstadt, DE // Harman International</div>
+    </div>
+  </section>
+
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>SENSOR FUSION — DEEP LEARNING — ADAS TESTING — MACHINE LEARNING — POWERTRAIN — </span>
+      <span>SENSOR FUSION — DEEP LEARNING — ADAS TESTING — MACHINE LEARNING — POWERTRAIN — </span>
     </div>
   </div>
-</section>
 
-<section id="experience">
-  <div class="sh"><span class="sh-num">02 /</span><h2 class="sh-title">Experience</h2><div class="sh-line"></div></div>
-  <div class="exp-list">
-
-    <div class="exp-item reveal">
-      <div>
-        <div class="exp-date">APR 2025<br>— CURRENT</div>
-        <div class="exp-active">▲ Active</div>
+  <section id="about">
+    <div class="reveal-up"><h2 style="font-family: 'Syne'; font-size: 2rem; line-height: 1.1; margin-bottom: 2rem;">THE ARCHITECTURE OF MOTION.</h2></div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem;">
+      <div class="reveal-up">
+        <p style="color: var(--muted); line-height: 1.8;">I am currently pursuing my M.Eng at Technische Hochschule Ingolstadt and completing my Master Thesis at Harman International. My work lives at the exact intersection of hardware and intelligence.</p>
       </div>
-      <div>
-        <div class="exp-role">Working Student — ADAS</div>
-        <div class="exp-co">Harman International · Garching, Germany</div>
-        <ul class="exp-ul">
-          <li>Supported system-level testing for ADAS features including L2+ functionalities using CANoe and CANape.</li>
-          <li>Created and managed test configurations for ECU communication (CAN, FlexRay); performed bug tracking via RQM.</li>
-          <li>Conducted log analysis, sensor validation, and HIL/SIL data preparation for automotive feature integration.</li>
-          <li>Developed tool automation scripts and internal apps for streamlined test result documentation.</li>
-        </ul>
-        <div class="tags">
-          <span class="tag">ADAS L2+</span><span class="tag">CANoe</span><span class="tag">CANape</span><span class="tag">CAN / FlexRay</span><span class="tag">HIL / SIL</span><span class="tag">RQM</span>
+      <div class="reveal-up">
+        <p style="color: var(--muted); line-height: 1.8;">From designing high-voltage powertrain systems for Formula Student to conducting battery abuse tests on BMW i4 cells, and building robust LiDAR/Radar pipelines for L2+ ADAS functionalities.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="expertise">
+    <div class="reveal-up"><h2 style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--muted); margin-bottom: 3rem; text-transform: uppercase;">01 / Core Expertise</h2></div>
+    
+    <div class="expertise-list">
+      <div class="expertise-item hoverable reveal-up">
+        <div class="expertise-num">01</div>
+        <div class="expertise-name">Sensor Fusion</div>
+        <div class="expertise-desc">Integration and mathematical alignment of LiDAR, RADAR, and Camera data for robust VRU detection.</div>
+      </div>
+      <div class="expertise-item hoverable reveal-up">
+        <div class="expertise-num">02</div>
+        <div class="expertise-name">ADAS Testing</div>
+        <div class="expertise-desc">System-level L2+ feature validation using CANoe, CANape, and detailed HIL/SIL data preparation.</div>
+      </div>
+      <div class="expertise-item hoverable reveal-up">
+        <div class="expertise-num">03</div>
+        <div class="expertise-name">Powertrain</div>
+        <div class="expertise-desc">Mechanical design, GD&T, and FEA simulation for high-voltage battery modules and race gearboxes.</div>
+      </div>
+      <div class="expertise-item hoverable reveal-up">
+        <div class="expertise-num">04</div>
+        <div class="expertise-name">Deep Learning</div>
+        <div class="expertise-desc">Python, PyTorch, and OpenCV driven model development for object tracking and trajectory prediction.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="reveal-up"><h2 style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--muted); margin-bottom: 3rem; text-transform: uppercase;">02 / Select Experience</h2></div>
+    
+    <table class="exp-table">
+      <tr class="exp-row reveal-up">
+        <td class="exp-year">2025 — PRES</td>
+        <td>
+          <div class="exp-role">Working Student ADAS</div>
+          <div class="exp-company">Harman International / Garching, DE</div>
+          <div class="exp-details">Managed test configurations for CAN/FlexRay ECU communication. Conducted log analysis and developed tool automation scripts for L2+ feature validation.</div>
+        </td>
+      </tr>
+      <tr class="exp-row reveal-up">
+        <td class="exp-year">2023 — PRES</td>
+        <td>
+          <div class="exp-role">Research Assistant</div>
+          <div class="exp-company">Carissma THI / Ingolstadt, DE</div>
+          <div class="exp-details">Designed custom mechanical test rigs for battery nail penetration on BMW i4 G26 cells. Engineered MATLAB optimisation functions improving evaluation efficiency by 20%.</div>
+        </td>
+      </tr>
+      <tr class="exp-row reveal-up">
+        <td class="exp-year">2023 — 2024</td>
+        <td>
+          <div class="exp-role">Team Lead Powertrain</div>
+          <div class="exp-company">Schanzer Racing Electric / Ingolstadt, DE</div>
+          <div class="exp-details">Led design of a lightweight gearbox system yielding +15% torque. Conducted rigorous GD&T stack-ups and validated high-voltage connectors via SolidWorks.</div>
+        </td>
+      </tr>
+    </table>
+  </section>
+
+  <section id="work">
+    <div class="reveal-up"><h2 style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--muted); margin-bottom: 3rem; text-transform: uppercase;">03 / Engineering Data</h2></div>
+    
+    <div class="project-filters reveal-up">
+      <button class="filter-btn hoverable active" data-filter="all">All Specs</button>
+      <button class="filter-btn hoverable" data-filter="hardware">Hardware / Mech</button>
+      <button class="filter-btn hoverable" data-filter="software">Software / Fusion</button>
+      <button class="filter-btn hoverable" data-filter="testing">Validation / QA</button>
+    </div>
+
+    <div class="project-list" id="project-list">
+      
+      <a href="#" class="project-row hoverable reveal-up" data-category="hardware testing">
+        <div class="p-left">
+          <span class="p-num">01</span>
+          <h3 class="p-title">EOL Battery Testing</h3>
         </div>
-      </div>
-    </div>
-
-    <div class="exp-item reveal">
-      <div>
-        <div class="exp-date">OCT 2023<br>— CURRENT</div>
-        <div class="exp-active">▲ Active</div>
-      </div>
-      <div>
-        <div class="exp-role">Research Assistant — Project BALSAM</div>
-        <div class="exp-co">Carissma · Technische Hochschule Ingolstadt</div>
-        <ul class="exp-ul">
-          <li>Designed custom test rigs for battery nail penetration testing on BMW i4 G26 cells.</li>
-          <li>Developed MATLAB-based optimisation functions, improving data evaluation efficiency by 20%.</li>
-          <li>Conducted battery abuse testing for safety &amp; durability, ensuring compliance with regulatory standards.</li>
-          <li>Automated data processing pipelines to support accurate calibration of battery pack functions.</li>
-        </ul>
-        <div class="tags">
-          <span class="tag">Battery Testing</span><span class="tag">MATLAB</span><span class="tag">BMW i4 G26</span><span class="tag">Safety Standards</span><span class="tag">DFM</span>
+        <div class="p-right">
+          <span class="p-tags">HV Systems / ISO Safety</span>
+          <span class="p-icon">↗</span>
         </div>
-      </div>
-    </div>
+      </a>
 
-    <div class="exp-item reveal">
-      <div><div class="exp-date">MAR 2023<br>— AUG 2024</div></div>
-      <div>
-        <div class="exp-role">Team Leader — Powertrain Department</div>
-        <div class="exp-co">Schanzer Racing Electric · Ingolstadt</div>
-        <ul class="exp-ul">
-          <li>Designed and validated high-voltage connectors using SolidWorks &amp; CATIA.</li>
-          <li>Led design of a lightweight gearbox system: +15% torque transmission, −12% weight.</li>
-          <li>Conducted GD&amp;T analysis and tolerance stack-ups for key drivetrain components.</li>
-          <li>Developed connector interfaces for powertrain systems ensuring mechanical &amp; electrical compatibility.</li>
-        </ul>
-        <div class="tags">
-          <span class="tag">SolidWorks</span><span class="tag">CATIA</span><span class="tag">GD&T</span><span class="tag">HV Systems</span><span class="tag">Formula Student</span>
+      <a href="#" class="project-row hoverable reveal-up" data-category="hardware">
+        <div class="p-left">
+          <span class="p-num">02</span>
+          <h3 class="p-title">Gearbox Validation</h3>
         </div>
-      </div>
-    </div>
-
-    <div class="exp-item reveal">
-      <div><div class="exp-date">AUG — SEPT<br>2023</div></div>
-      <div>
-        <div class="exp-role">Holiday Job — Assembly &amp; Quality Inspector</div>
-        <div class="exp-co">Audi AG · Ingolstadt</div>
-        <ul class="exp-ul">
-          <li>Conducted quality assurance checks on 400+ high-voltage components on the production line, ensuring full alignment with Audi's quality standards.</li>
-        </ul>
-        <div class="tags">
-          <span class="tag">Quality Assurance</span><span class="tag">HV Components</span><span class="tag">Production Line</span>
+        <div class="p-right">
+          <span class="p-tags">Mechanical / FEA / GD&T</span>
+          <span class="p-icon">↗</span>
         </div>
+      </a>
+
+      <a href="https://github.com/attaramaan/Car2x" target="_blank" class="project-row hoverable reveal-up" data-category="software">
+        <div class="p-left">
+          <span class="p-num">03</span>
+          <h3 class="p-title">Car2X Sensor Fusion</h3>
+        </div>
+        <div class="p-right">
+          <span class="p-tags">LiDAR / Python / V2X</span>
+          <span class="p-icon">↗</span>
+        </div>
+      </a>
+
+      <a href="#" class="project-row hoverable reveal-up" data-category="software testing">
+        <div class="p-left">
+          <span class="p-num">04</span>
+          <h3 class="p-title">Defect Tracking AI</h3>
+        </div>
+        <div class="p-right">
+          <span class="p-tags">Python / PyTorch / QA</span>
+          <span class="p-icon">↗</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="reveal-up"><a href="mailto:attaramaan@outlook.de" class="footer-title hoverable">LET'S TALK</a></div>
+    
+    <div class="footer-meta reveal-up">
+      <div>Ingolstadt, DE</div>
+      <div>
+        <a href="https://linkedin.com/in/amaanattar/" target="_blank" class="hoverable" style="color:inherit; margin-right:1rem; text-decoration:none;">LinkedIn</a>
+        <a href="https://github.com/amaanattar" target="_blank" class="hoverable" style="color:inherit; text-decoration:none;">GitHub</a>
       </div>
+      <div>© 2026</div>
     </div>
+  </footer>
 
-  </div>
-</section>
-
-<section id="projects">
-  <div class="sh"><span class="sh-num">03 /</span><h2 class="sh-title">Projects</h2><div class="sh-line"></div></div>
-  <div class="proj-grid">
-
-    <div class="proj-card reveal">
-      <div class="proj-n">PROJECT 01</div>
-      <div class="proj-name">End-of-Line Testing System for Battery Modules</div>
-      <div class="proj-period">Aug 2024 — Feb 2025</div>
-      <p class="proj-desc">Built a mechanical test rig for high-voltage battery packs with ISO compliance. Designed custom connectors, automated data acquisition, and conducted battery abuse testing for safety validation and repeatability.</p>
-      <div class="tags" style="margin-bottom:1rem"><span class="tag">HV Battery</span><span class="tag">ISO Safety</span><span class="tag">Test Automation</span><span class="tag">Connector Design</span></div>
-    </div>
-
-    <div class="proj-card reveal">
-      <div class="proj-n">PROJECT 02</div>
-      <div class="proj-name">Powertrain Gearbox Design &amp; Validation</div>
-      <div class="proj-period">Mar 2024 — Aug 2024</div>
-      <p class="proj-desc">High-precision gearbox achieving +15% torque transmission and −12% weight. Led full validation, mechanical stress simulations, and applied GD&T for precise fitment in the Formula Student race car.</p>
-      <div class="tags" style="margin-bottom:1rem"><span class="tag">Gearbox</span><span class="tag">FEA</span><span class="tag">GD&T</span><span class="tag">Schanzer Racing</span></div>
-    </div>
-
-    <div class="proj-card reveal">
-      <div class="proj-n">PROJECT 03</div>
-      <div class="proj-name">Car2X Demonstration &amp; Validation</div>
-      <div class="proj-period">Oct 2023 — Feb 2024</div>
-      <p class="proj-desc">Real-world V2X communication validation at THI Testfield "First Mile". Built sensor fusion models (LiDAR, RADAR, GNSS, camera) for improved VRU detection and analysed RSU-based hazard detection latency.</p>
-      <div class="tags" style="margin-bottom:1rem"><span class="tag">V2X</span><span class="tag">Sensor Fusion</span><span class="tag">LiDAR</span><span class="tag">RADAR</span><span class="tag">GNSS</span></div>
-      <a href="https://github.com/attaramaan/Car2x" target="_blank" class="proj-link">GitHub ↗</a>
-    </div>
-
-    <div class="proj-card reveal">
-      <div class="proj-n">PROJECT 04</div>
-      <div class="proj-name">Automated Testing &amp; Defect Analysis</div>
-      <div class="proj-period">Mar 2023 — Feb 2024</div>
-      <p class="proj-desc">Python-based automated test scripts for Schanzer Racing, reducing manual errors. JIRA defect tracking, endurance testing, and standardised test case documentation for future development cycles.</p>
-      <div class="tags" style="margin-bottom:1rem"><span class="tag">Python</span><span class="tag">Test Automation</span><span class="tag">JIRA</span><span class="tag">QA</span></div>
-    </div>
-
-  </div>
-</section>
-
-<section id="education">
-  <div class="sh"><span class="sh-num">04 /</span><h2 class="sh-title">Education</h2><div class="sh-line"></div></div>
-  <div class="edu-grid reveal">
-    <div class="edu-card">
-      <div class="edu-stripe"></div>
-      <div class="edu-deg">M.Eng Automotive Engineering</div>
-      <div class="edu-school">Technische Hochschule Ingolstadt · Germany</div>
-      <div class="edu-meta">Expected Sep 2025</div>
-      <span class="gpa-badge">GPA 1.8 / 4.0</span>
-    </div>
-    <div class="edu-card">
-      <div class="edu-stripe"></div>
-      <div class="edu-deg">B.E Mechanical Engineering</div>
-      <div class="edu-school">University of Mumbai · India</div>
-      <div class="edu-meta">Graduated Aug 2022</div>
-      <span class="gpa-badge">GPA 1.2 / 4.0</span>
-    </div>
-  </div>
-  <div class="courses-box reveal">
-    <div class="courses-label">Relevant Coursework</div>
-    <div class="courses-list">
-      <span class="course">Automotive Electronics</span><span class="course">Battery Systems</span>
-      <span class="course">Computer Vision</span><span class="course">Autonomous Vehicles</span>
-      <span class="course">Control Systems</span><span class="course">Power Electronics</span>
-      <span class="course">Finite Element Analysis</span><span class="course">Electrochemistry</span>
-      <span class="course">Advanced Manufacturing Design</span><span class="course">Machine Design</span>
-    </div>
-  </div>
-</section>
-
-<section id="publication">
-  <div class="sh"><span class="sh-num">05 /</span><h2 class="sh-title">Publication</h2><div class="sh-line"></div></div>
-  <div class="pub-card reveal">
-    <div>
-      <div class="pub-journal">IJERT · International Journal of Engineering Research &amp; Technology</div>
-      <div class="pub-title">Workplace Safety using Artificial Intelligence and Machine Learning</div>
-    </div>
-    <a href="https://www.ijert.org/workplace-safety-using-ai-and-ml" target="_blank" class="pub-link">Read Paper →</a>
-  </div>
-</section>
-
-<section id="contact">
-  <div class="sh"><span class="sh-num">06 /</span><h2 class="sh-title">Contact</h2></div>
-  <p class="contact-sub reveal">Open to thesis collaborations, full-time roles in ADAS, autonomous driving, and EV engineering. Let's build something remarkable.</p>
-  <div class="contact-grid reveal">
-    <a href="mailto:attaramaan@outlook.de" class="contact-card">
-      <svg class="ic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-      <span class="cl">Email</span>
-      <span class="cv">attaramaan@outlook.de</span>
-    </a>
-    <a href="tel:+4915906760342" class="contact-card">
-      <svg class="ic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      <span class="cl">Phone</span>
-      <span class="cv">+49 159 0676 0342</span>
-    </a>
-    <a href="https://linkedin.com/in/amaanattar/" target="_blank" class="contact-card">
-      <svg class="ic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
-      <span class="cl">LinkedIn</span>
-      <span class="cv">linkedin.com/in/amaanattar</span>
-    </a>
-    <a href="https://github.com/attaramaan" target="_blank" class="contact-card">
-      <svg class="ic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-      <span class="cl">GitHub</span>
-      <span class="cv">github.com/attaramaan</span>
-    </a>
-  </div>
-</section>
-
-<footer>
-  <div class="footer-brand">AMAAN ATTAR</div>
-  <div class="footer-copy">© 2026 · Ingolstadt, Germany</div>
-</footer>
+</main>
 
 <script>
-  // Nav scroll
-  const nav = document.getElementById('navbar');
-  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+  // --- Custom Cursor Logic ---
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', (e) => {
+    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+  });
+  document.querySelectorAll('.hoverable').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
 
-  // Mobile menu logic
-  const mobileToggle = document.querySelector('.mobile-toggle');
-  const navLinks = document.querySelector('.nav-links');
+  // --- Preloader Sequence ---
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('ll-1').classList.add('show'), 200);
+    setTimeout(() => document.getElementById('ll-2').classList.add('show'), 600);
+    setTimeout(() => document.getElementById('ll-3').classList.add('show'), 1000);
+    
+    setTimeout(() => {
+      document.getElementById('preloader').classList.add('hide');
+      document.getElementById('telemetry-hud').style.opacity = 1;
+      initScrollReveals();
+    }, 2000);
+  });
+
+  // --- Overlay Menu ---
+  const menuBtn = document.getElementById('menu-btn');
+  const menuOverlay = document.getElementById('menu-overlay');
+  const menuItems = document.querySelectorAll('.menu-item');
   
-  mobileToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
+  menuBtn.addEventListener('click', () => {
+    menuOverlay.classList.toggle('open');
+    menuBtn.textContent = menuOverlay.classList.contains('open') ? '[ CLOSE ]' : '[ MENU ]';
   });
-
-  navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('active');
+  
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      menuOverlay.classList.remove('open');
+      menuBtn.textContent = '[ MENU ]';
     });
   });
 
-  // Scroll reveal + skill bar trigger
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        e.target.querySelectorAll('.skill-fill').forEach(b => b.classList.add('go'));
-        io.unobserve(e.target);
+  // --- Scroll Reveal Logic (Intersection Observer) ---
+  function initScrollReveals() {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { root: null, rootMargin: '0px', threshold: 0.1 });
+
+    document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
+  }
+
+  // --- Project Filtering Logic ---
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projRows = document.querySelectorAll('.project-row');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filterValue = btn.getAttribute('data-filter');
+
+      projRows.forEach(row => {
+        if (filterValue === 'all') {
+          row.classList.remove('hide');
+        } else {
+          const categories = row.getAttribute('data-category').split(' ');
+          if (categories.includes(filterValue)) {
+            row.classList.remove('hide');
+          } else {
+            row.classList.add('hide');
+          }
+        }
+      });
+    });
+  });
+
+  // --- Three.js ADAS Simulation Background ---
+  const canvas = document.getElementById('webgl-canvas');
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x0a0a0a, 0.012);
+
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 8, 18);
+  camera.lookAt(0, 0, -20);
+
+  const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const composer = new THREE.EffectComposer(renderer);
+  const renderScene = new THREE.RenderPass(scene, camera);
+  composer.addPass(renderScene);
+
+  // --- Theme Management & Variables ---
+  let isLightMode = false;
+  const themeBtn = document.getElementById('theme-btn');
+  
+  const colors = {
+    dark: { bg: 0x0a0a0a, line: 0x444444, car: 0xffffff, pointDim: 0x222222, pointHi: 0xffffff, alert: 0xff3333 },
+    light: { bg: 0xe5e5e5, line: 0xb0b0b0, car: 0x0a0a0a, pointDim: 0xcccccc, pointHi: 0x0a0a0a, alert: 0xff0000 }
+  };
+  let currentColors = colors.dark;
+
+  // Environment Grid
+  const gridMat = new THREE.LineBasicMaterial({ color: currentColors.line, transparent: true, opacity: 0.3 });
+  const gridHelper = new THREE.GridHelper(200, 100);
+  gridHelper.material = gridMat;
+  gridHelper.position.y = -2;
+  scene.add(gridHelper);
+
+  // Scatter Plot Data Points
+  const particlesCount = 4000;
+  const particlesGeometry = new THREE.BufferGeometry();
+  const posArray = new Float32Array(particlesCount * 3);
+  const colorArray = new Float32Array(particlesCount * 3);
+
+  const dimColor = new THREE.Color(currentColors.pointDim);
+  const hiColor = new THREE.Color(currentColors.pointHi);
+
+  for(let i = 0; i < particlesCount * 3; i+=3) {
+    let x = (Math.random() - 0.5) * 120;
+    if (x > -4 && x < 4) x += (x > 0 ? 8 : -8); 
+    posArray[i] = x;
+    posArray[i+1] = (Math.random() * 10) - 2; 
+    posArray[i+2] = (Math.random() - 0.5) * 200; 
+
+    colorArray[i] = dimColor.r; colorArray[i+1] = dimColor.g; colorArray[i+2] = dimColor.b;
+  }
+  
+  particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+  particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+  const particleMaterial = new THREE.PointsMaterial({
+    size: 0.15, vertexColors: true, transparent: true, opacity: 0.8
+  });
+  const particlesMesh = new THREE.Points(particlesGeometry, particleMaterial);
+  scene.add(particlesMesh);
+
+  // Ego Vehicle Digital Twin
+  const carGroup = new THREE.Group();
+  const egoMat = new THREE.LineBasicMaterial({ color: currentColors.car, transparent: true, opacity: 0.8 });
+  
+  const chassisGeo = new THREE.BoxGeometry(2.2, 1, 4.8);
+  const chassis = new THREE.LineSegments(new THREE.EdgesGeometry(chassisGeo), egoMat);
+  chassis.position.y = -1;
+
+  const cabinGeo = new THREE.BoxGeometry(1.8, 0.8, 2.5);
+  const cabin = new THREE.LineSegments(new THREE.EdgesGeometry(cabinGeo), egoMat);
+  cabin.position.set(0, -0.1, -0.2);
+
+  carGroup.add(chassis); carGroup.add(cabin);
+  scene.add(carGroup);
+
+  // Target Vehicles
+  const targets = [];
+  const tBoxGeo = new THREE.BoxGeometry(2.2, 1.5, 4.8);
+  const tEdgesGeo = new THREE.EdgesGeometry(tBoxGeo);
+  const tEdgeMat = new THREE.LineBasicMaterial({ color: currentColors.line });
+
+  for(let i = 0; i < 4; i++) {
+      let tOutline = new THREE.LineSegments(tEdgesGeo, tEdgeMat);
+      let laneX = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 8 + 3);
+      tOutline.position.set(laneX, -1, -Math.random() * 200 - 50);
+      scene.add(tOutline);
+      targets.push({ mesh: tOutline, speed: Math.random() * 10 + 5 });
+  }
+
+  // --- Interaction & Physics Variables ---
+  let normMouseX = 0;
+  const hudOffset = document.getElementById('hud-offset');
+  const hudSpeed = document.getElementById('hud-speed');
+  const hudTargets = document.getElementById('hud-targets');
+  const hudSys = document.getElementById('hud-sys');
+  const collisionWarning = document.getElementById('collision-warning');
+  
+  document.addEventListener('mousemove', e => { normMouseX = (e.clientX / window.innerWidth) * 2 - 1; });
+
+  // Theme Toggle Processing
+  themeBtn.addEventListener('click', () => {
+    isLightMode = !isLightMode;
+    document.body.setAttribute('data-theme', isLightMode ? 'light' : 'dark');
+    currentColors = isLightMode ? colors.light : colors.dark;
+    
+    scene.fog.color.setHex(currentColors.bg);
+    gridMat.color.setHex(currentColors.line);
+    tEdgeMat.color.setHex(currentColors.line);
+    if(!isColliding) egoMat.color.setHex(currentColors.car);
+    
+    dimColor.setHex(currentColors.pointDim);
+    hiColor.setHex(currentColors.pointHi);
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // --- Animation Loop & AABB Collision ---
+  const clock = new THREE.Clock();
+  const targetSpeed = 16; 
+  let actualSpeed = 16;
+  let isColliding = false;
+  let scanAngle = 0;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const delta = clock.getDelta();
+    const elapsedTime = clock.getElapsedTime();
+
+    let hitDetected = false;
+    let trackedCount = 0;
+
+    targets.forEach(t => {
+        t.mesh.position.z += (actualSpeed - t.speed) * delta;
+        if(t.mesh.position.z > -100 && t.mesh.position.z < 20) trackedCount++;
+
+        if(t.mesh.position.z > 30) {
+            t.mesh.position.z = -150 - Math.random() * 100;
+            t.mesh.position.x = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 8 + 3);
+            t.speed = Math.random() * 10 + 5;
+        }
+        
+        const dx = Math.abs(carGroup.position.x - t.mesh.position.x);
+        const dz = Math.abs(carGroup.position.z - t.mesh.position.z);
+        if (dx < 2.0 && dz < 4.5) hitDetected = true;
+    });
+
+    if (hitDetected && !isColliding) {
+        isColliding = true;
+        collisionWarning.classList.add('active');
+        egoMat.color.setHex(currentColors.alert); 
+        hudSys.innerText = "[ AEB_ENGAGED ]"; hudSys.style.color = "var(--alert)";
+    } else if (!hitDetected && isColliding) {
+        isColliding = false;
+        collisionWarning.classList.remove('active');
+        egoMat.color.setHex(currentColors.car); 
+        hudSys.innerText = "[ SYSTEM_OK ]"; hudSys.style.color = "var(--text)";
+    }
+
+    actualSpeed += ((isColliding ? 2 : targetSpeed) - actualSpeed) * 0.1; 
+    gridHelper.position.z = (elapsedTime * actualSpeed) % 2; 
+
+    // Scatter Plot Scanner Logic
+    const positions = particlesMesh.geometry.attributes.position.array;
+    const ptColors = particlesMesh.geometry.attributes.color.array;
+    scanAngle += 12 * delta; if (scanAngle > Math.PI * 2) scanAngle -= Math.PI * 2;
+
+    for(let i = 0; i < particlesCount * 3; i += 3) {
+      positions[i+2] += actualSpeed * delta;
+      if(positions[i+2] > 20) {
+        positions[i+2] = -180;
+        ptColors[i] = dimColor.r; ptColors[i+1] = dimColor.g; ptColors[i+2] = dimColor.b;
       }
-    });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+      const dx = positions[i] - carGroup.position.x;
+      const dz = positions[i+2] - carGroup.position.z;
+      let pointAngle = Math.atan2(dx, dz); if (pointAngle < 0) pointAngle += Math.PI * 2;
+      let angleDiff = Math.abs(pointAngle - scanAngle);
+      if (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
+
+      if (angleDiff < 0.15) {
+        ptColors[i] = hiColor.r; ptColors[i+1] = hiColor.g; ptColors[i+2] = hiColor.b;
+      } else {
+        ptColors[i] += (dimColor.r - ptColors[i]) * 0.05;
+        ptColors[i+1] += (dimColor.g - ptColors[i+1]) * 0.05;
+        ptColors[i+2] += (dimColor.b - ptColors[i+2]) * 0.05;
+      }
+    }
+    particlesMesh.geometry.attributes.position.needsUpdate = true;
+    particlesMesh.geometry.attributes.color.needsUpdate = true;
+
+    // Movement & Camera Parallax
+    let targetX = normMouseX * 4;
+    carGroup.position.x += (targetX - carGroup.position.x) * 0.05;
+    carGroup.rotation.z = (carGroup.position.x - targetX) * 0.05;
+    carGroup.rotation.y = -carGroup.rotation.z * 0.5;
+
+    let camShakeX = isColliding ? (Math.random() - 0.5) * 0.3 : 0;
+    let camShakeY = isColliding ? (Math.random() - 0.5) * 0.3 : 0;
+    camera.position.x = camShakeX;
+    camera.position.y = 8 + camShakeY;
+    camera.lookAt(carGroup.position.x * 0.5, 0, -20);
+
+    // Update HUD
+    hudOffset.innerText = `${carGroup.position.x.toFixed(2)}m`;
+    hudSpeed.innerText = isColliding ? `ERR` : `${(actualSpeed * 3.6).toFixed(1)}km/h`;
+    hudTargets.innerText = trackedCount;
+
+    composer.render();
+  }
+  animate();
 </script>
 </body>
 </html>
