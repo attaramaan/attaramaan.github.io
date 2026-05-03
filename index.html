@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Amaan Attar - Automotive Engineer specializing in ADAS, sensor fusion, and autonomous systems." />
-  <title>Amaan Attar — Automotive Engineer</title>
+  <meta name="description" content="Amaan Attar - Automotive Systems Engineer specializing in ADAS, Deep Learning, and HV Systems." />
+  <title>Amaan Attar — Automotive Systems Engineer</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,700&family=Rajdhani:wght@400;500;600;700&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   
   <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
@@ -20,490 +19,379 @@
   <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 
   <style>
-    /* Premium Studio Variables */
     :root {
-      --bg: #0a0a0a;
-      --text: #ffffff;
-      --border: rgba(255, 255, 255, 0.15);
-      --accent: #ffffff;
-      --alert: #ff3333;
-      --muted: #888888;
-      --overlay: #0a0a0a;
-      --hover-bg: rgba(255, 255, 255, 0.03);
+      --bg: #fafafa;
+      --text: #1a1a1a;
+      --border: rgba(0, 0, 0, 0.08);
+      --accent: #2563eb; 
+      --alert: #dc2626; 
+      --muted: #6b7280;
+      --overlay: rgba(250, 250, 250, 0.95);
+      --hover-bg: rgba(0, 0, 0, 0.03);
     }
     
-    body[data-theme="light"] {
-      --bg: #e5e5e5;
-      --text: #0a0a0a;
-      --border: rgba(0, 0, 0, 0.15);
-      --accent: #0a0a0a;
-      --alert: #ff0000;
-      --muted: #666666;
-      --overlay: #e5e5e5;
-      --hover-bg: rgba(0, 0, 0, 0.04);
+    body[data-theme="dark"] {
+      --bg: #121212;
+      --text: #f4f4f5;
+      --border: rgba(255, 255, 255, 0.1);
+      --accent: #3b82f6;
+      --alert: #ef4444;
+      --muted: #a1a1aa;
+      --overlay: rgba(18, 18, 18, 0.95);
+      --hover-bg: rgba(255, 255, 255, 0.05);
     }
     
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    
     html { scroll-behavior: smooth; }
     
     body {
       background: var(--bg); color: var(--text);
-      font-family: 'Inter', sans-serif; font-weight: 400;
-      overflow-x: hidden; transition: background 0.6s ease, color 0.6s ease;
+      font-family: 'Inter', sans-serif; 
+      font-weight: 400;
+      overflow-x: hidden; transition: background 0.5s ease, color 0.5s ease;
       cursor: none;
     }
 
-    /* --- Custom Cursor --- */
     .custom-cursor {
-      position: fixed; top: 0; left: 0; width: 12px; height: 12px;
-      background: var(--text); border-radius: 50%;
+      position: fixed; top: 0; left: 0; width: 8px; height: 8px;
+      background: var(--accent); border-radius: 50%;
       pointer-events: none; z-index: 10000;
       transform: translate(-50%, -50%);
-      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), mix-blend-mode 0.3s;
-      mix-blend-mode: difference;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s, opacity 0.3s;
+      opacity: 0.8;
     }
-    .custom-cursor.hover { width: 50px; height: 50px; background: #ffffff; mix-blend-mode: difference; }
+    .custom-cursor.hover { width: 40px; height: 40px; background: transparent; border: 1px solid var(--accent); opacity: 1; }
     @media (pointer: coarse) { .custom-cursor { display: none; } body { cursor: auto; } }
 
-    /* --- High-End Film Grain Noise --- */
-    .noise {
-      position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.08"/%3E%3C/svg%3E');
-    }
-
-    /* --- Preloader --- */
     #preloader {
       position: fixed; inset: 0; background: var(--bg); z-index: 9999;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
-      transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+      transition: opacity 1.2s cubic-bezier(0.77, 0, 0.175, 1), visibility 1.2s;
     }
-    #preloader.hide { transform: translateY(-100%); }
+    #preloader.hide { opacity: 0; visibility: hidden; }
     .loader-text { overflow: hidden; margin-bottom: 0.5rem; padding: 0.1em 0; }
     .loader-line { 
-      display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; text-transform: uppercase; color: var(--text);
-      transform: translateY(100%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); line-height: 1.2;
+      display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text);
+      transform: translateY(100%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .loader-line.show { transform: translateY(0); }
 
-    /* --- Three.js Canvas & HUD --- */
-    #webgl-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; opacity: 0.4; transition: opacity 0.5s; }
+    #webgl-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; opacity: 0.5; transition: opacity 0.5s; pointer-events: none; }
+    
     #telemetry-hud {
       position: fixed; bottom: 2rem; right: 2rem; z-index: 50; pointer-events: none;
-      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--muted);
-      text-transform: uppercase; text-align: right; display: flex; flex-direction: column; gap: 0.3rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--muted);
+      text-align: right; display: flex; flex-direction: column; gap: 0.4rem;
       opacity: 0; transition: opacity 1s ease;
     }
-    .hud-val { color: var(--text); font-weight: 500; font-size: 0.8rem; }
-    .sys-status { color: var(--text); margin-top: 0.5rem; border: 1px solid var(--border); padding: 0.2rem 0.5rem; display: inline-block; }
+    .hud-val { color: var(--text); font-weight: 500; }
+    .sys-status { color: var(--accent); margin-top: 0.5rem; border: 1px solid var(--border); padding: 0.3rem 0.6rem; border-radius: 4px; display: inline-block; background: var(--bg); }
 
-    /* Subtle Collision Warning UI */
     #collision-warning {
       position: fixed; bottom: 2rem; left: 2rem; z-index: 150; pointer-events: none;
       display: flex; align-items: center; gap: 1rem;
-      background: rgba(10, 2, 5, 0.85); border-left: 3px solid var(--alert);
-      padding: 1rem 1.5rem; box-shadow: 0 4px 15px rgba(255, 0, 68, 0.2);
-      backdrop-filter: blur(8px);
-      opacity: 0; transform: translateX(-20px); transition: opacity 0.3s ease, transform 0.3s ease;
+      background: var(--bg); border: 1px solid var(--alert); border-radius: 6px;
+      padding: 1rem 1.5rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease;
     }
-    #collision-warning.active {
-      opacity: 1; transform: translateX(0);
-    }
-    .warning-icon { font-size: 1.5rem; line-height: 1; }
+    #collision-warning.active { opacity: 1; transform: translateY(0); }
+    .warning-icon { color: var(--alert); font-size: 1.2rem; }
     .warning-text-box { display: flex; flex-direction: column; }
-    .warning-title { font-family: 'Chakra Petch', sans-serif; font-size: 1rem; font-weight: 700; color: var(--alert); letter-spacing: 2px; line-height: 1.2; }
-    .warning-sub { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 600; color: #ffffff; letter-spacing: 1px; text-transform: uppercase; }
+    .warning-title { font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--alert); }
+    .warning-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text); margin-top: 0.2rem; }
 
-    /* --- Navigation --- */
     nav {
-      position: fixed; top: 0; width: 100%; padding: 2rem 3rem; z-index: 200;
-      display: flex; justify-content: space-between; align-items: center; mix-blend-mode: difference; color: #fff;
+      position: fixed; top: 0; width: 100%; padding: 2rem 4vw; z-index: 200;
+      display: flex; justify-content: space-between; align-items: center; 
+      background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
     }
-    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; text-transform: uppercase; text-decoration: none; color: inherit; }
-    .nav-controls { display: flex; gap: 2rem; align-items: center; }
-    .nav-btn { 
-      background: none; border: none; color: inherit; font-family: 'JetBrains Mono', monospace; 
-      font-size: 0.75rem; text-transform: uppercase; cursor: none; letter-spacing: 1px;
-    }
+    .logo { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.5px; text-decoration: none; color: var(--text); }
+    .logo span { color: var(--accent); }
+    .nav-controls { display: flex; gap: 2.5rem; align-items: center; }
+    .nav-btn { background: none; border: none; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: none; text-decoration: none; transition: color 0.3s; }
+    .nav-btn:hover { color: var(--accent); }
 
-    /* --- Full-Screen Menu Overlay --- */
     #menu-overlay {
-      position: fixed; inset: 0; background: var(--overlay); z-index: 150;
+      position: fixed; inset: 0; background: var(--overlay); backdrop-filter: blur(10px); z-index: 150;
       display: flex; flex-direction: column; justify-content: center; padding: 0 10vw;
-      clip-path: inset(0 0 100% 0); transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+      opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease;
     }
-    #menu-overlay.open { clip-path: inset(0 0 0 0); }
-    .menu-link-wrapper { overflow: hidden; padding: 0.2em 0; margin: -0.2em 0; }
-    .menu-link {
-      display: inline-block; font-family: 'Syne', sans-serif; font-size: clamp(3rem, 8vw, 8rem); 
-      font-weight: 800; line-height: 1.05; text-transform: uppercase; color: var(--text); text-decoration: none;
-      transform: translateY(110%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s;
-      white-space: normal; word-break: break-word;
-    }
+    #menu-overlay.open { opacity: 1; visibility: visible; }
+    .menu-link-wrapper { overflow: hidden; padding: 0.5rem 0; }
+    .menu-link { display: inline-block; font-family: 'Inter', sans-serif; font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 600; letter-spacing: -1px; color: var(--text); text-decoration: none; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s; }
     #menu-overlay.open .menu-link { transform: translateY(0); }
-    .menu-link:hover { color: var(--muted); }
+    .menu-link:hover { color: var(--accent); }
 
-    /* --- Editorial Layout Core --- */
-    main { position: relative; z-index: 10; }
-    section { padding: 8rem 3rem; border-bottom: 1px solid var(--border); }
+    main { position: relative; z-index: 10; padding-bottom: 5rem; }
+    section { padding: 8rem 4vw; max-width: 1400px; margin: 0 auto; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
     
-    /* --- Scroll Reveal Utilities --- */
-    .reveal-up { overflow: hidden; padding-bottom: 0.5em; margin-bottom: -0.5em; padding-top: 0.2em; margin-top: -0.2em; }
-    .reveal-up > * { display: block; transform: translateY(120%); transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
-    .reveal-up.active > * { transform: translateY(0); }
+    .reveal-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform, opacity; }
+    .reveal-up.active { opacity: 1; transform: translateY(0); }
 
-    /* --- Hero Section (Centered & Precise Layout) --- */
-    .hero { 
-      min-height: 100vh; 
-      display: flex; 
-      flex-direction: column; 
-      justify-content: center; /* Vertically center */
-      align-items: center;     /* Horizontally center */
-      padding: 0 3rem; 
-      position: relative;
-    }
-    .hero-center {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-    }
-    
-    /* PRECISE, SMALLER, ELEGANT FONT */
-    .hero-title { 
-      font-family: 'Syne', sans-serif; 
-      font-size: clamp(2rem, 4.5vw, 4.5rem); /* Significantly scaled down */
-      font-weight: 700; /* Dialed back weight for elegance */
-      line-height: 1.1; 
-      text-transform: uppercase; 
-      letter-spacing: 4px; /* Added tracking for an engineered, precise look */
-      margin: 0; 
-      text-align: center;
-    }
-    
-    /* Meta text pinned to the bottom */
-    .hero-meta { 
-      position: absolute; 
-      bottom: 3rem; 
-      left: 3rem; 
-      right: 3rem; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: flex-end; 
-      border-top: 1px solid var(--border); 
-      padding-top: 1.5rem; 
-    }
-    .hero-desc { max-width: 400px; font-size: 0.9rem; line-height: 1.6; color: var(--muted); text-align: left; }
-    .hero-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; text-align: right; }
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 4vw; max-width: 1400px; margin: 0 auto; position: relative; }
+    .hero-title { font-family: 'Inter', sans-serif; font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 700; line-height: 1.05; letter-spacing: -2px; margin-bottom: 1.5rem; max-width: 900px; }
+    .hero-title span { color: var(--accent); }
+    .hero-subtitle { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; display: block; }
+    .hero-desc { font-size: 1.1rem; line-height: 1.6; color: var(--muted); max-width: 600px; }
 
-    /* --- Infinite Marquee --- */
-    .marquee { overflow: hidden; white-space: nowrap; padding: 2.5rem 0; border-bottom: 1px solid var(--border); background: var(--text); color: var(--bg); }
-    .marquee-track { display: inline-block; animation: scroll-marquee 25s linear infinite; font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; line-height: 1.1; padding: 0.1em 0; }
-    .marquee-track span { padding-right: 2rem; }
-    @keyframes scroll-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .section-header { margin-bottom: 4rem; display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; }
+    .section-title { font-size: 2rem; font-weight: 600; letter-spacing: -0.5px; }
+    .section-index { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--accent); }
 
-    /* --- Services / Expertise List --- */
-    .expertise-list { display: flex; flex-direction: column; }
-    .expertise-item { 
-      display: flex; justify-content: space-between; align-items: center; padding: 3rem 0; 
-      border-bottom: 1px solid var(--border); transition: padding 0.4s ease, background 0.4s ease; cursor: none;
-    }
-    .expertise-item:hover { padding: 3rem 2rem; background: var(--hover-bg); border-color: var(--accent); }
-    .expertise-num { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--muted); transition: color 0.4s; }
-    .expertise-name { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 4rem); font-weight: 700; text-transform: uppercase; letter-spacing: -1px; line-height: 1.0; }
-    .expertise-desc { font-size: 0.9rem; color: var(--muted); max-width: 300px; text-align: right; line-height: 1.5; }
-    .expertise-item:hover .expertise-num { color: var(--accent); }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-row { border-bottom: 1px solid var(--border); transition: background 0.3s; }
+    .data-row:hover { background: var(--hover-bg); }
+    .data-row td { padding: 2.5rem 1rem; vertical-align: top; }
+    .data-time { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--accent); width: 15%; font-weight: 500; }
+    .data-main-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .data-sub-title { font-size: 0.95rem; color: var(--muted); margin-bottom: 1rem; font-family: 'JetBrains Mono', monospace; }
+    .data-details { font-size: 1rem; line-height: 1.6; color: var(--muted); max-width: 700px; }
 
-    /* --- Experience Table --- */
-    .exp-table { width: 100%; border-collapse: collapse; }
-    .exp-row { border-bottom: 1px solid var(--border); }
-    .exp-row td { padding: 3rem 0; vertical-align: top; }
-    .exp-year { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--muted); width: 15%; }
-    .exp-role { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; line-height: 1.1; }
-    .exp-company { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; }
-    .exp-details { font-size: 0.9rem; line-height: 1.6; color: var(--muted); max-width: 500px; }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem; }
+    .skill-cat { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
+    .skill-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .skill-tag { padding: 0.4rem 0.8rem; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; transition: border-color 0.3s; }
+    .skill-tag:hover { border-color: var(--accent); }
 
-    /* --- Projects Section (Elegant Interactive List) --- */
-    .project-filters { display: flex; gap: 1rem; margin-bottom: 4rem; flex-wrap: wrap; }
-    .filter-btn { background: transparent; border: 1px solid var(--border); color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; padding: 0.6rem 1.2rem; cursor: none; border-radius: 30px; transition: all 0.3s ease; }
-    .filter-btn:hover { border-color: var(--accent); color: var(--text); }
-    .filter-btn.active { border-color: var(--accent); color: var(--text); background: var(--hover-bg); }
+    .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+    .project-card { border: 1px solid var(--border); padding: 2.5rem 2rem; border-radius: 8px; text-decoration: none; color: var(--text); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: none; display: flex; flex-direction: column; background: var(--bg); }
+    .project-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px var(--hover-bg); border-color: var(--accent); }
+    .p-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
+    .p-icon { font-size: 1.2rem; color: var(--muted); }
+    .p-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem; }
+    .p-tags { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; margin-top: auto; }
 
-    .project-list { display: flex; flex-direction: column; border-top: 1px solid var(--border); }
-    .project-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 4rem 0; border-bottom: 1px solid var(--border);
-      text-decoration: none; color: var(--text); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      cursor: none;
-    }
-    .project-row.hide { display: none; }
-    .project-row:hover { padding: 4rem 2rem; background: var(--hover-bg); border-color: var(--accent); }
-    
-    .p-left { display: flex; align-items: baseline; gap: 2rem; }
-    .p-num { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--muted); transition: color 0.4s; }
-    .p-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 3.5rem); font-weight: 700; text-transform: uppercase; letter-spacing: -1px; margin: 0; line-height: 1.0; }
-    
-    .p-right { display: flex; align-items: center; gap: 4rem; }
-    .p-tags { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--muted); text-transform: uppercase; text-align: right; }
-    .p-icon { font-size: 1.5rem; font-family: 'JetBrains Mono', monospace; transform: rotate(0deg); transition: transform 0.4s ease, color 0.4s; color: var(--muted); font-weight: 300;}
-    
-    .project-row:hover .p-icon { transform: rotate(45deg); color: var(--text); }
-    .project-row:hover .p-num { color: var(--accent); }
+    footer { padding: 8rem 4vw 3rem; max-width: 1400px; margin: 0 auto; text-align: center; }
+    .footer-title { font-size: clamp(3rem, 6vw, 6rem); font-weight: 700; letter-spacing: -2px; text-decoration: none; color: var(--text); transition: color 0.3s; display: inline-block; margin-bottom: 4rem; }
+    .footer-title:hover { color: var(--accent); }
+    .footer-meta { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 2rem; }
+    .footer-links a { color: inherit; text-decoration: none; margin: 0 1rem; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--accent); }
 
-    /* --- Footer --- */
-    footer { padding: 10rem 3rem 3rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .footer-title { font-family: 'Syne', sans-serif; font-size: clamp(4rem, 12vw, 15rem); font-weight: 800; line-height: 1.05; text-transform: uppercase; letter-spacing: -0.05em; text-decoration: none; color: var(--text); transition: color 0.3s; display: block; word-break: break-word;}
-    .footer-title:hover { color: var(--muted); }
-    .footer-meta { width: 100%; display: flex; justify-content: space-between; margin-top: 8rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; border-top: 1px solid var(--border); padding-top: 1.5rem; }
-
-    /* --- Responsive --- */
     @media (max-width: 900px) {
-      nav { padding: 1.5rem; }
-      section { padding: 5rem 1.5rem; }
-      
-      /* Mobile Hero Fixes */
-      .hero-meta {
-        position: relative;
-        bottom: 0; left: 0; right: 0;
-        margin-top: 4rem;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.5rem;
-        width: 100%;
-        border-top: 1px solid var(--border);
-        padding-top: 1.5rem;
-      }
-      .hero-desc { text-align: left; }
-      .hero-tag { text-align: left; }
-
-      .expertise-item { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 2rem 0; }
-      .expertise-desc { text-align: left; }
-      .exp-row td { display: block; padding: 1.5rem 0; }
-      .exp-year { padding-bottom: 0; width: 100%; }
-      .project-row { flex-direction: column; align-items: flex-start; gap: 2rem; padding: 3rem 0; }
-      .project-row:hover { padding: 3rem 1rem; }
-      .p-right { width: 100%; justify-content: space-between; gap: 1rem; }
-      .p-tags { text-align: left; }
+      .data-row td { display: block; padding: 1.5rem 0; }
+      .data-time { width: 100%; margin-bottom: 1rem; }
       #telemetry-hud { display: none; }
-      #collision-warning { bottom: 1.5rem; left: 1.5rem; padding: 0.8rem 1rem; }
     }
   </style>
 </head>
-<body data-theme="dark">
+<body data-theme="light">
 
 <div class="custom-cursor" id="cursor"></div>
 
-<div class="noise"></div>
-
 <div id="preloader">
-  <div class="loader-text"><span class="loader-line" id="ll-1">ADAS SYSTEM v3.1.2</span></div>
-  <div class="loader-text"><span class="loader-line" id="ll-2">CALIBRATING LIDAR CLOUD</span></div>
-  <div class="loader-text"><span class="loader-line" id="ll-3">AMAAN ATTAR © 2026</span></div>
+  <div class="loader-text"><span class="loader-line" id="ll-1">INITIALIZING ENVIRONMENT</span></div>
+  <div class="loader-text"><span class="loader-line" id="ll-2">SENSING DEPENDENCIES</span></div>
+  <div class="loader-text"><span class="loader-line" id="ll-3">BOOT SEQUENCE COMPLETE</span></div>
 </div>
 
 <canvas id="webgl-canvas"></canvas>
 
 <div id="telemetry-hud">
-  <div>Lat Offset: <span class="hud-val" id="hud-offset">0.00m</span></div>
-  <div>Velocity: <span class="hud-val" id="hud-speed">0.0km/h</span></div>
-  <div>Targets: <span class="hud-val" id="hud-targets">0</span></div>
-  <div class="sys-status" id="hud-sys">SYSTEM_OK</div>
+  <div>LAT_DEV: <span class="hud-val" id="hud-offset">0.00m</span></div>
+  <div>VELOCITY: <span class="hud-val" id="hud-speed">0.0km/h</span></div>
+  <div>OBJ_TRACKED: <span class="hud-val" id="hud-targets">0</span></div>
+  <div class="sys-status" id="hud-sys">STATUS: NOMINAL</div>
 </div>
 
 <div id="collision-warning">
-  <span class="warning-icon">⚠️</span>
+  <span class="warning-icon">●</span>
   <div class="warning-text-box">
-    <span class="warning-title">PROXIMITY ALERT</span>
-    <span class="warning-sub">AEB ENGAGED</span>
+    <span class="warning-title">Proximity Alert Detected</span>
+    <span class="warning-sub">Safety intervention required.</span>
   </div>
 </div>
 
 <nav>
-  <a href="#" class="logo hoverable">AMAAN ATTAR</a>
+  <a href="#" class="logo hoverable">Amaan <span>Attar</span></a>
   <div class="nav-controls">
-    <button class="nav-btn hoverable" id="theme-btn">[ THEME ]</button>
-    <button class="nav-btn hoverable" id="menu-btn">[ MENU ]</button>
+    <a href="AttarAmaan_Resume.pdf" download class="nav-btn hoverable">Resume</a>
+    <button class="nav-btn hoverable" id="theme-btn">Dark Mode</button>
+    <button class="nav-btn hoverable" id="menu-btn">Menu</button>
   </div>
 </nav>
 
 <div id="menu-overlay">
-  <div class="menu-link-wrapper"><a href="#about" class="menu-link hoverable menu-item">About</a></div>
-  <div class="menu-link-wrapper"><a href="#expertise" class="menu-link hoverable menu-item">Expertise</a></div>
-  <div class="menu-link-wrapper"><a href="#experience" class="menu-link hoverable menu-item">Experience</a></div>
-  <div class="menu-link-wrapper"><a href="#work" class="menu-link hoverable menu-item">Work</a></div>
-  <div class="menu-link-wrapper"><a href="#contact" class="menu-link hoverable menu-item">Contact</a></div>
+  <div class="menu-link-wrapper"><a href="#about" class="menu-item menu-link">About.</a></div>
+  <div class="menu-link-wrapper"><a href="#education" class="menu-item menu-link">Education.</a></div>
+  <div class="menu-link-wrapper"><a href="#experience" class="menu-item menu-link">Experience.</a></div>
+  <div class="menu-link-wrapper"><a href="#skills" class="menu-item menu-link">Skills.</a></div>
+  <div class="menu-link-wrapper"><a href="#work" class="menu-item menu-link">Projects.</a></div>
+  <div class="menu-link-wrapper"><a href="#contact" class="menu-item menu-link">Contact.</a></div>
 </div>
 
 <main>
   
   <section id="hero" class="hero">
-    
-    <div class="hero-center">
-      <div class="reveal-up"><h1 class="hero-title">AUTONOMOUS</h1></div>
-      <div class="reveal-up"><h1 class="hero-title">ENGINEERING</h1></div>
-      <div class="reveal-up"><h1 class="hero-title">&amp; DESIGN</h1></div>
-    </div>
-
-    <div class="hero-meta reveal-up">
-      <p class="hero-desc">Aspiring automotive engineer bridging rigorous mechanical hardware with cutting-edge artificial intelligence and sensor fusion.</p>
-      <div class="hero-tag">Ingolstadt, DE // Harman International</div>
-    </div>
+    <div class="reveal-up"><span class="hero-subtitle">Ingolstadt, DE — Automotive Systems Engineer</span></div>
+    <div class="reveal-up"><h1 class="hero-title">Where Mechanical Precision Meets <span> Machine Intelligence.</span>.</h1></div>
+    <div class="reveal-up"><p class="hero-desc">M.Eng candidate at Technische Hochschule Ingolstadt (THI). Specializing in ADAS validation, Deep Learning for VRU tracking, and HV powertrain development.</p></div>
   </section>
-
-  <div class="marquee">
-    <div class="marquee-track">
-      <span>SENSOR FUSION — DEEP LEARNING — ADAS TESTING — MACHINE LEARNING — POWERTRAIN — </span>
-      <span>SENSOR FUSION — DEEP LEARNING — ADAS TESTING — MACHINE LEARNING — POWERTRAIN — </span>
-    </div>
-  </div>
 
   <section id="about">
-    <div class="reveal-up"><h2 style="font-family: 'Syne'; font-size: 2rem; line-height: 1.1; margin-bottom: 2rem;">THE ARCHITECTURE OF MOTION.</h2></div>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem;">
-      <div class="reveal-up">
-        <p style="color: var(--muted); line-height: 1.8;">I am currently pursuing my M.Eng at Technische Hochschule Ingolstadt and completing my Master Thesis at Harman International. My work lives at the exact intersection of hardware and intelligence.</p>
-      </div>
-      <div class="reveal-up">
-        <p style="color: var(--muted); line-height: 1.8;">From designing high-voltage powertrain systems for Formula Student to conducting battery abuse tests on BMW i4 cells, and building robust LiDAR/Radar pipelines for L2+ ADAS functionalities.</p>
-      </div>
+    <div class="section-header reveal-up">
+      <h2 class="section-title">Background</h2>
+      <span class="section-index">01</span>
+    </div>
+    <div class="data-details reveal-up">
+      <p style="font-size: 1.15rem; margin-bottom: 2rem;">I am a systems-oriented engineer focused on making autonomous vehicles safer and more reliable. My expertise lies in the full development V-cycle: from training Deep Learning models for trajectory prediction at Harman to designing mechanical high-voltage enclosures for Formula Student racing.</p>
+      <p style="font-size: 1.15rem;">I thrive in complex environments where hardware rigor meets intelligent software, ensuring that every sensor fusion algorithm and mechanical component adheres to the highest safety and performance standards.</p>
     </div>
   </section>
 
-  <section id="expertise">
-    <div class="reveal-up"><h2 style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--muted); margin-bottom: 3rem; text-transform: uppercase;">01 / Core Expertise</h2></div>
-    
-    <div class="expertise-list">
-      <div class="expertise-item hoverable reveal-up">
-        <div class="expertise-num">01</div>
-        <div class="expertise-name">Sensor Fusion</div>
-        <div class="expertise-desc">Integration and mathematical alignment of LiDAR, RADAR, and Camera data for robust VRU detection.</div>
-      </div>
-      <div class="expertise-item hoverable reveal-up">
-        <div class="expertise-num">02</div>
-        <div class="expertise-name">ADAS Testing</div>
-        <div class="expertise-desc">System-level L2+ feature validation using CANoe, CANape, and detailed HIL/SIL data preparation.</div>
-      </div>
-      <div class="expertise-item hoverable reveal-up">
-        <div class="expertise-num">03</div>
-        <div class="expertise-name">Powertrain</div>
-        <div class="expertise-desc">Mechanical design, GD&T, and FEA simulation for high-voltage battery modules and race gearboxes.</div>
-      </div>
-      <div class="expertise-item hoverable reveal-up">
-        <div class="expertise-num">04</div>
-        <div class="expertise-name">Deep Learning</div>
-        <div class="expertise-desc">Python, PyTorch, and OpenCV driven model development for object tracking and trajectory prediction.</div>
-      </div>
+  <section id="education">
+    <div class="section-header reveal-up">
+      <h2 class="section-title">Education</h2>
+      <span class="section-index">02</span>
     </div>
-  </section>
-
-  <section id="experience">
-    <div class="reveal-up"><h2 style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--muted); margin-bottom: 3rem; text-transform: uppercase;">02 / Select Experience</h2></div>
-    
-    <table class="exp-table">
-      <tr class="exp-row reveal-up">
-        <td class="exp-year">2025 — PRES</td>
+    <table class="data-table">
+      <tr class="data-row reveal-up hoverable">
+        <td class="data-time">2023 — Present</td>
         <td>
-          <div class="exp-role">Working Student ADAS</div>
-          <div class="exp-company">Harman International / Garching, DE</div>
-          <div class="exp-details">Managed test configurations for CAN/FlexRay ECU communication. Conducted log analysis and developed tool automation scripts for L2+ feature validation.</div>
+          <div class="data-main-title">M.Eng in Automotive Production Engineering</div>
+          <div class="data-sub-title">Technische Hochschule Ingolstadt (THI) / Germany</div>
+          <div class="data-details">Specializing in autonomous systems and automotive electronics.</div>
         </td>
       </tr>
-      <tr class="exp-row reveal-up">
-        <td class="exp-year">2023 — PRES</td>
+      <tr class="data-row reveal-up hoverable">
+        <td class="data-time">2019 — 2022</td>
         <td>
-          <div class="exp-role">Research Assistant</div>
-          <div class="exp-company">Carissma THI / Ingolstadt, DE</div>
-          <div class="exp-details">Designed custom mechanical test rigs for battery nail penetration on BMW i4 G26 cells. Engineered MATLAB optimisation functions improving evaluation efficiency by 20%.</div>
-        </td>
-      </tr>
-      <tr class="exp-row reveal-up">
-        <td class="exp-year">2023 — 2024</td>
-        <td>
-          <div class="exp-role">Team Lead Powertrain</div>
-          <div class="exp-company">Schanzer Racing Electric / Ingolstadt, DE</div>
-          <div class="exp-details">Led design of a lightweight gearbox system yielding +15% torque. Conducted rigorous GD&T stack-ups and validated high-voltage connectors via SolidWorks.</div>
+          <div class="data-main-title">B.Eng in Mechanical Engineering</div>
+          <div class="data-sub-title">Mumbai, India</div>
+          <div class="data-details">Foundation in thermal engineering, structural mechanics, and CAD/CAM. Graduated First Class with Distinction (Gold Medalist).</div>
         </td>
       </tr>
     </table>
   </section>
 
-  <section id="work">
-    <div class="reveal-up"><h2 style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--muted); margin-bottom: 3rem; text-transform: uppercase;">03 / Engineering Data</h2></div>
-    
-    <div class="project-filters reveal-up">
-      <button class="filter-btn hoverable active" data-filter="all">All Specs</button>
-      <button class="filter-btn hoverable" data-filter="hardware">Hardware / Mech</button>
-      <button class="filter-btn hoverable" data-filter="software">Software / Fusion</button>
-      <button class="filter-btn hoverable" data-filter="testing">Validation / QA</button>
+  <section id="experience">
+    <div class="section-header reveal-up">
+      <h2 class="section-title">Experience</h2>
+      <span class="section-index">03</span>
     </div>
+    <table class="data-table">
+      <tr class="data-row reveal-up hoverable">
+        <td class="data-time">2025 — Present</td>
+        <td>
+          <div class="data-main-title">Master Thesis — ADAS & Deep Learning</div>
+          <div class="data-sub-title">Harman International / Garching, DE</div>
+          <div class="data-details">Developed a safety layer to enhance the reliability of end-to-end ADAS planning models for urban driving. Researched and implemented hybrid enforcement strategies (rule-based and AI) to maintain spatial safety bound-
+aries.</div>
+        </td>
+      </tr>
+      <tr class="data-row reveal-up hoverable">
+        <td class="data-time">2024 — 2025</td>
+        <td>
+          <div class="data-main-title">Working Student — ADAS Validation</div>
+          <div class="data-sub-title">Harman International / Garching, DE</div>
+          <div class="data-details">Configured and maintained test setups for CAN, FlexRay, and Ethernet communications. Conducted log analysis for L2+ features and automated validation workflows using Python.</div>
+        </td>
+      </tr>
+      <tr class="data-row reveal-up hoverable">
+        <td class="data-time">2023 — 2024</td>
+        <td>
+          <div class="data-main-title">Research Assistant — HV Battery Testing</div>
+          <div class="data-sub-title">Carissma THI / Ingolstadt, DE</div>
+          <div class="data-details">Designed mechanical abuse-testing rigs for BMW i4 battery cells. Optimized MATLAB scripts for automated data evaluation, improving evaluation efficiency by 20%.</div>
+        </td>
+      </tr>
+      <tr class="data-row reveal-up hoverable">
+        <td class="data-time">2023 — 2024</td>
+        <td>
+          <div class="data-main-title">Team Lead Powertrain</div>
+          <div class="data-sub-title">Schanzer Racing Electric / Ingolstadt, DE</div>
+          <div class="data-details">Oversaw design of a lightweight gearbox and high-voltage battery enclosure. Managed GD&T compliance and validated critical components via SolidWorks FEA.</div>
+        </td>
+      </tr>
+    </table>
+  </section>
 
-    <div class="project-list" id="project-list">
-      
-      <a href="#" class="project-row hoverable reveal-up" data-category="hardware testing">
-        <div class="p-left">
-          <span class="p-num">01</span>
-          <h3 class="p-title">EOL Battery Testing</h3>
+  <section id="skills">
+    <div class="section-header reveal-up">
+      <h2 class="section-title">Technical Skills</h2>
+      <span class="section-index">04</span>
+    </div>
+    <div class="skills-grid">
+      <div class="reveal-up">
+        <div class="skill-cat">Software & AI</div>
+        <ul class="skill-list">
+          <li class="skill-tag">Python</li>
+          <li class="skill-tag">PyTorch</li>
+          <li class="skill-tag">MATLAB</li>
+          <li class="skill-tag">OpenCV</li>
+          <li class="skill-tag">C++</li>
+        </ul>
+      </div>
+      <div class="reveal-up">
+        <div class="skill-cat">ADAS & Testing</div>
+        <ul class="skill-list">
+          <li class="skill-tag">Vector CANoe</li>
+          <li class="skill-tag">CANape</li>
+          <li class="skill-tag">ROS</li>
+          <li class="skill-tag">CAN / FlexRay</li>
+          <li class="skill-tag">V-Cycle</li>
+        </ul>
+      </div>
+      <div class="reveal-up">
+        <div class="skill-cat">Design & Simulation</div>
+        <ul class="skill-list">
+          <li class="skill-tag">SolidWorks</li>
+          <li class="skill-tag">CATIA V5</li>
+          <li class="skill-tag">Ansys (FEA)</li>
+          <li class="skill-tag">GD&T</li>
+          <li class="skill-tag">ISO 26262</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="section-header reveal-up">
+      <h2 class="section-title">Selected Projects</h2>
+      <span class="section-index">05</span>
+    </div>
+    <div class="project-grid">
+      <a href="#" class="project-card reveal-up hoverable">
+        <div class="p-header">
+          <svg class="p-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 7 17 7 17 17"></polyline><line x1="7" y1="17" x2="17" y2="7"></line></svg>
         </div>
-        <div class="p-right">
-          <span class="p-tags">HV Systems / ISO Safety</span>
-          <span class="p-icon">↗</span>
-        </div>
+        <h3 class="p-title">VRU Tracking with LSTMs</h3>
+        <span class="p-tags">Deep Learning / ADAS / Python</span>
       </a>
-
-      <a href="#" class="project-row hoverable reveal-up" data-category="hardware">
-        <div class="p-left">
-          <span class="p-num">02</span>
-          <h3 class="p-title">Gearbox Validation</h3>
+      <a href="https://github.com/attaramaan/Car2x" target="_blank" class="project-card reveal-up hoverable">
+        <div class="p-header">
+          <svg class="p-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 7 17 7 17 17"></polyline><line x1="7" y1="17" x2="17" y2="7"></line></svg>
         </div>
-        <div class="p-right">
-          <span class="p-tags">Mechanical / FEA / GD&T</span>
-          <span class="p-icon">↗</span>
-        </div>
+        <h3 class="p-title">Car2X LiDAR Pipeline</h3>
+        <span class="p-tags">ROS / Sensor Fusion / LiDAR</span>
       </a>
-
-      <a href="https://github.com/attaramaan/Car2x" target="_blank" class="project-row hoverable reveal-up" data-category="software">
-        <div class="p-left">
-          <span class="p-num">03</span>
-          <h3 class="p-title">Car2X Sensor Fusion</h3>
+      <a href="#" class="project-card reveal-up hoverable">
+        <div class="p-header">
+          <svg class="p-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 7 17 7 17 17"></polyline><line x1="7" y1="17" x2="17" y2="7"></line></svg>
         </div>
-        <div class="p-right">
-          <span class="p-tags">LiDAR / Python / V2X</span>
-          <span class="p-icon">↗</span>
-        </div>
+        <h3 class="p-title">HV Battery Enclosure FEA</h3>
+        <span class="p-tags">SolidWorks / Structural Analysis</span>
       </a>
-
-      <a href="#" class="project-row hoverable reveal-up" data-category="software testing">
-        <div class="p-left">
-          <span class="p-num">04</span>
-          <h3 class="p-title">Defect Tracking AI</h3>
-        </div>
-        <div class="p-right">
-          <span class="p-tags">Python / PyTorch / QA</span>
-          <span class="p-icon">↗</span>
-        </div>
-      </a>
-
     </div>
   </section>
 
   <footer id="contact">
-    <div class="reveal-up"><a href="mailto:attaramaan@outlook.de" class="footer-title hoverable">LET'S TALK</a></div>
-    
+    <div class="reveal-up"><a href="mailto:attaramaan@outlook.de" class="footer-title hoverable">Get in touch.</a></div>
     <div class="footer-meta reveal-up">
-      <div>Ingolstadt, DE</div>
-      <div>
-        <a href="https://linkedin.com/in/amaanattar/" target="_blank" class="hoverable" style="color:inherit; margin-right:1rem; text-decoration:none;">LinkedIn</a>
-        <a href="https://github.com/amaanattar" target="_blank" class="hoverable" style="color:inherit; text-decoration:none;">GitHub</a>
+      <div>Ingolstadt, Germany</div>
+      <div class="footer-links">
+        <a href="https://linkedin.com/in/amaanattar/" target="_blank" class="hoverable">LinkedIn</a>
+        <a href="https://github.com/amaanattar" target="_blank" class="hoverable">GitHub</a>
       </div>
-      <div>© 2026</div>
+      <div>© 2026 Amaan Attar</div>
     </div>
   </footer>
 
 </main>
 
 <script>
-  // --- Custom Cursor Logic ---
+  // Custom Cursor
   const cursor = document.getElementById('cursor');
   document.addEventListener('mousemove', (e) => {
     cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
@@ -513,289 +401,129 @@
     el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
   });
 
-  // --- Preloader Sequence ---
+  // Preloader
   window.addEventListener('load', () => {
-    setTimeout(() => document.getElementById('ll-1').classList.add('show'), 200);
-    setTimeout(() => document.getElementById('ll-2').classList.add('show'), 600);
-    setTimeout(() => document.getElementById('ll-3').classList.add('show'), 1000);
-    
+    setTimeout(() => document.getElementById('ll-1').classList.add('show'), 150);
+    setTimeout(() => document.getElementById('ll-2').classList.add('show'), 400);
+    setTimeout(() => document.getElementById('ll-3').classList.add('show'), 700);
     setTimeout(() => {
       document.getElementById('preloader').classList.add('hide');
       document.getElementById('telemetry-hud').style.opacity = 1;
       initScrollReveals();
-    }, 2000);
+    }, 1500);
   });
 
-  // --- Overlay Menu ---
+  // Menu Toggle
   const menuBtn = document.getElementById('menu-btn');
   const menuOverlay = document.getElementById('menu-overlay');
-  const menuItems = document.querySelectorAll('.menu-item');
-  
   menuBtn.addEventListener('click', () => {
     menuOverlay.classList.toggle('open');
-    menuBtn.textContent = menuOverlay.classList.contains('open') ? '[ CLOSE ]' : '[ MENU ]';
+    menuBtn.textContent = menuOverlay.classList.contains('open') ? 'Close' : 'Menu';
   });
-  
-  menuItems.forEach(item => {
+  document.querySelectorAll('.menu-item').forEach(item => {
     item.addEventListener('click', () => {
       menuOverlay.classList.remove('open');
-      menuBtn.textContent = '[ MENU ]';
+      menuBtn.textContent = 'Menu';
     });
   });
 
-  // --- Scroll Reveal Logic (Intersection Observer) ---
+  // Scroll Reveal
   function initScrollReveals() {
-    const observer = new IntersectionObserver((entries, obs) => {
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('active');
-          obs.unobserve(entry.target);
         }
       });
-    }, { root: null, rootMargin: '0px', threshold: 0.1 });
-
+    }, { threshold: 0.1 });
     document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
   }
 
-  // --- Project Filtering Logic ---
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const projRows = document.querySelectorAll('.project-row');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const filterValue = btn.getAttribute('data-filter');
-
-      projRows.forEach(row => {
-        if (filterValue === 'all') {
-          row.classList.remove('hide');
-        } else {
-          const categories = row.getAttribute('data-category').split(' ');
-          if (categories.includes(filterValue)) {
-            row.classList.remove('hide');
-          } else {
-            row.classList.add('hide');
-          }
-        }
-      });
-    });
-  });
-
-  // --- Three.js ADAS Simulation Background ---
+  // Three.js Background
   const canvas = document.getElementById('webgl-canvas');
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x0a0a0a, 0.012);
-
+  scene.fog = new THREE.FogExp2(0xfafafa, 0.015);
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.set(0, 8, 18);
   camera.lookAt(0, 0, -20);
-
   const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
-
   const composer = new THREE.EffectComposer(renderer);
-  const renderScene = new THREE.RenderPass(scene, camera);
-  composer.addPass(renderScene);
+  composer.addPass(new THREE.RenderPass(scene, camera));
 
-  // --- Theme Management & Variables ---
-  let isLightMode = false;
+  let isLightMode = true;
   const themeBtn = document.getElementById('theme-btn');
-  
   const colors = {
-    dark: { bg: 0x0a0a0a, line: 0x444444, car: 0xffffff, pointDim: 0x222222, pointHi: 0xffffff, alert: 0xff3333 },
-    light: { bg: 0xe5e5e5, line: 0xb0b0b0, car: 0x0a0a0a, pointDim: 0xcccccc, pointHi: 0x0a0a0a, alert: 0xff0000 }
+    light: { bg: 0xfafafa, line: 0xd1d5db, car: 0x2563eb, ptDim: 0xe5e7eb, ptHi: 0x2563eb },
+    dark:  { bg: 0x121212, line: 0x3f3f46, car: 0x3b82f6, ptDim: 0x27272a, ptHi: 0x3b82f6 }
   };
-  let currentColors = colors.dark;
+  let currentColors = colors.light;
 
-  // Environment Grid
-  const gridMat = new THREE.LineBasicMaterial({ color: currentColors.line, transparent: true, opacity: 0.3 });
-  const gridHelper = new THREE.GridHelper(200, 100);
-  gridHelper.material = gridMat;
+  const gridHelper = new THREE.GridHelper(200, 80);
+  gridHelper.material = new THREE.LineBasicMaterial({ color: currentColors.line, transparent: true, opacity: 0.5 });
   gridHelper.position.y = -2;
   scene.add(gridHelper);
 
-  // Scatter Plot Data Points
-  const particlesCount = 4000;
+  const particlesCount = 2500;
   const particlesGeometry = new THREE.BufferGeometry();
   const posArray = new Float32Array(particlesCount * 3);
   const colorArray = new Float32Array(particlesCount * 3);
-
-  const dimColor = new THREE.Color(currentColors.pointDim);
-  const hiColor = new THREE.Color(currentColors.pointHi);
-
   for(let i = 0; i < particlesCount * 3; i+=3) {
-    let x = (Math.random() - 0.5) * 120;
-    if (x > -4 && x < 4) x += (x > 0 ? 8 : -8); 
-    posArray[i] = x;
-    posArray[i+1] = (Math.random() * 10) - 2; 
-    posArray[i+2] = (Math.random() - 0.5) * 200; 
-
-    colorArray[i] = dimColor.r; colorArray[i+1] = dimColor.g; colorArray[i+2] = dimColor.b;
+    posArray[i] = (Math.random() - 0.5) * 120;
+    posArray[i+1] = (Math.random() * 8) - 2;
+    posArray[i+2] = (Math.random() - 0.5) * 200;
   }
-  
   particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
   particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
-
-  const particleMaterial = new THREE.PointsMaterial({
-    size: 0.15, vertexColors: true, transparent: true, opacity: 0.8
-  });
-  const particlesMesh = new THREE.Points(particlesGeometry, particleMaterial);
+  const particlesMesh = new THREE.Points(particlesGeometry, new THREE.PointsMaterial({ size: 0.12, vertexColors: true, transparent: true, opacity: 0.7 }));
   scene.add(particlesMesh);
 
-  // Ego Vehicle Digital Twin
   const carGroup = new THREE.Group();
-  const egoMat = new THREE.LineBasicMaterial({ color: currentColors.car, transparent: true, opacity: 0.8 });
-  
-  const chassisGeo = new THREE.BoxGeometry(2.2, 1, 4.8);
-  const chassis = new THREE.LineSegments(new THREE.EdgesGeometry(chassisGeo), egoMat);
-  chassis.position.y = -1;
-
-  const cabinGeo = new THREE.BoxGeometry(1.8, 0.8, 2.5);
-  const cabin = new THREE.LineSegments(new THREE.EdgesGeometry(cabinGeo), egoMat);
-  cabin.position.set(0, -0.1, -0.2);
-
-  carGroup.add(chassis); carGroup.add(cabin);
+  const egoMat = new THREE.LineBasicMaterial({ color: currentColors.car, transparent: true, opacity: 0.9 });
+  carGroup.add(new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 0.8, 4.5)), egoMat));
+  carGroup.children[0].position.y = -1.2;
   scene.add(carGroup);
 
-  // Target Vehicles
   const targets = [];
-  const tBoxGeo = new THREE.BoxGeometry(2.2, 1.5, 4.8);
-  const tEdgesGeo = new THREE.EdgesGeometry(tBoxGeo);
-  const tEdgeMat = new THREE.LineBasicMaterial({ color: currentColors.line });
-
-  for(let i = 0; i < 4; i++) {
-      let tOutline = new THREE.LineSegments(tEdgesGeo, tEdgeMat);
-      let laneX = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 8 + 3);
-      tOutline.position.set(laneX, -1, -Math.random() * 200 - 50);
-      scene.add(tOutline);
-      targets.push({ mesh: tOutline, speed: Math.random() * 10 + 5 });
+  for(let i = 0; i < 3; i++) {
+    const t = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 1.2, 4.5)), new THREE.LineBasicMaterial({ color: currentColors.line }));
+    t.position.set((Math.random() > 0.5 ? 6 : -6), -1, -Math.random() * 100 - 50);
+    scene.add(t);
+    targets.push({ mesh: t, speed: Math.random() * 8 + 6 });
   }
 
-  // --- Interaction & Physics Variables ---
-  let normMouseX = 0;
-  const hudOffset = document.getElementById('hud-offset');
-  const hudSpeed = document.getElementById('hud-speed');
-  const hudTargets = document.getElementById('hud-targets');
-  const hudSys = document.getElementById('hud-sys');
-  const collisionWarning = document.getElementById('collision-warning');
-  
-  document.addEventListener('mousemove', e => { normMouseX = (e.clientX / window.innerWidth) * 2 - 1; });
-
-  // Theme Toggle Processing
   themeBtn.addEventListener('click', () => {
     isLightMode = !isLightMode;
     document.body.setAttribute('data-theme', isLightMode ? 'light' : 'dark');
+    themeBtn.textContent = isLightMode ? 'Dark Mode' : 'Light Mode';
     currentColors = isLightMode ? colors.light : colors.dark;
-    
     scene.fog.color.setHex(currentColors.bg);
-    gridMat.color.setHex(currentColors.line);
-    tEdgeMat.color.setHex(currentColors.line);
-    if(!isColliding) egoMat.color.setHex(currentColors.car);
-    
-    dimColor.setHex(currentColors.pointDim);
-    hiColor.setHex(currentColors.pointHi);
+    gridHelper.material.color.setHex(currentColors.line);
+    egoMat.color.setHex(currentColors.car);
   });
 
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    composer.setSize(window.innerWidth, window.innerHeight);
-  });
+  let normMouseX = 0;
+  document.addEventListener('mousemove', e => { normMouseX = (e.clientX / window.innerWidth) * 2 - 1; });
 
-  // --- Animation Loop & AABB Collision ---
   const clock = new THREE.Clock();
-  const targetSpeed = 16; 
-  let actualSpeed = 16;
-  let isColliding = false;
-  let scanAngle = 0;
-
   function animate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
-    const elapsedTime = clock.getElapsedTime();
-
-    let hitDetected = false;
-    let trackedCount = 0;
+    let isColliding = false;
 
     targets.forEach(t => {
-        t.mesh.position.z += (actualSpeed - t.speed) * delta;
-        if(t.mesh.position.z > -100 && t.mesh.position.z < 20) trackedCount++;
-
-        if(t.mesh.position.z > 30) {
-            t.mesh.position.z = -150 - Math.random() * 100;
-            t.mesh.position.x = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 8 + 3);
-            t.speed = Math.random() * 10 + 5;
-        }
-        
-        const dx = Math.abs(carGroup.position.x - t.mesh.position.x);
-        const dz = Math.abs(carGroup.position.z - t.mesh.position.z);
-        if (dx < 2.0 && dz < 4.5) hitDetected = true;
+      t.mesh.position.z += (14 - t.speed) * delta;
+      if(t.mesh.position.z > 30) t.mesh.position.z = -150;
+      if(Math.abs(carGroup.position.x - t.mesh.position.x) < 2.2 && Math.abs(carGroup.position.z - t.mesh.position.z) < 5) isColliding = true;
     });
 
-    if (hitDetected && !isColliding) {
-        isColliding = true;
-        collisionWarning.classList.add('active');
-        egoMat.color.setHex(currentColors.alert); 
-        hudSys.innerText = "[ AEB_ENGAGED ]"; hudSys.style.color = "var(--alert)";
-    } else if (!hitDetected && isColliding) {
-        isColliding = false;
-        collisionWarning.classList.remove('active');
-        egoMat.color.setHex(currentColors.car); 
-        hudSys.innerText = "[ SYSTEM_OK ]"; hudSys.style.color = "var(--text)";
-    }
+    document.getElementById('collision-warning').classList.toggle('active', isColliding);
+    carGroup.position.x += (normMouseX * 4 - carGroup.position.x) * 0.05;
+    gridHelper.position.z = (clock.getElapsedTime() * 14) % 2;
 
-    actualSpeed += ((isColliding ? 2 : targetSpeed) - actualSpeed) * 0.1; 
-    gridHelper.position.z = (elapsedTime * actualSpeed) % 2; 
-
-    // Scatter Plot Scanner Logic
-    const positions = particlesMesh.geometry.attributes.position.array;
-    const ptColors = particlesMesh.geometry.attributes.color.array;
-    scanAngle += 12 * delta; if (scanAngle > Math.PI * 2) scanAngle -= Math.PI * 2;
-
-    for(let i = 0; i < particlesCount * 3; i += 3) {
-      positions[i+2] += actualSpeed * delta;
-      if(positions[i+2] > 20) {
-        positions[i+2] = -180;
-        ptColors[i] = dimColor.r; ptColors[i+1] = dimColor.g; ptColors[i+2] = dimColor.b;
-      }
-
-      const dx = positions[i] - carGroup.position.x;
-      const dz = positions[i+2] - carGroup.position.z;
-      let pointAngle = Math.atan2(dx, dz); if (pointAngle < 0) pointAngle += Math.PI * 2;
-      let angleDiff = Math.abs(pointAngle - scanAngle);
-      if (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
-
-      if (angleDiff < 0.15) {
-        ptColors[i] = hiColor.r; ptColors[i+1] = hiColor.g; ptColors[i+2] = hiColor.b;
-      } else {
-        ptColors[i] += (dimColor.r - ptColors[i]) * 0.05;
-        ptColors[i+1] += (dimColor.g - ptColors[i+1]) * 0.05;
-        ptColors[i+2] += (dimColor.b - ptColors[i+2]) * 0.05;
-      }
-    }
-    particlesMesh.geometry.attributes.position.needsUpdate = true;
-    particlesMesh.geometry.attributes.color.needsUpdate = true;
-
-    // Movement & Camera Parallax
-    let targetX = normMouseX * 4;
-    carGroup.position.x += (targetX - carGroup.position.x) * 0.05;
-    carGroup.rotation.z = (carGroup.position.x - targetX) * 0.05;
-    carGroup.rotation.y = -carGroup.rotation.z * 0.5;
-
-    let camShakeX = isColliding ? (Math.random() - 0.5) * 0.3 : 0;
-    let camShakeY = isColliding ? (Math.random() - 0.5) * 0.3 : 0;
-    camera.position.x = camShakeX;
-    camera.position.y = 8 + camShakeY;
-    camera.lookAt(carGroup.position.x * 0.5, 0, -20);
-
-    // Update HUD
-    hudOffset.innerText = `${carGroup.position.x.toFixed(2)}m`;
-    hudSpeed.innerText = isColliding ? `ERR` : `${(actualSpeed * 3.6).toFixed(1)}km/h`;
-    hudTargets.innerText = trackedCount;
+    document.getElementById('hud-offset').innerText = carGroup.position.x.toFixed(2) + "m";
+    document.getElementById('hud-speed').innerText = (isColliding ? 0 : 50.4) + "km/h";
 
     composer.render();
   }
